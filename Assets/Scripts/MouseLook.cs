@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class MouseLook : MonoBehaviour {
+public class MouseLook : NetworkBehaviour {
 
     public float maximumVerticalAngle = 45.0f, //the maximum and minimum angles that the player can look vertically
         minimumVerticalAngle = -45.0f;
@@ -9,11 +10,11 @@ public class MouseLook : MonoBehaviour {
 
     public float rotationX = 0;
 
-    public Camera playerCam;
+    public Camera playerCam; //drag in from the inspector.
 
     private void Start()
     {
-        playerCam = GameObject.Find("PlayerCamera").GetComponent<Camera>(); //finds the player camera
+        //playerCam = GameObject.Find("PlayerCamera").GetComponent<Camera>(); //finds the player camera
 
         Rigidbody body = GetComponent<Rigidbody>();
         if(body != null)
