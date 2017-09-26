@@ -14,13 +14,14 @@ public class MouseLook : NetworkBehaviour {
 
     private void Start()
     {
+        Rigidbody body = GetComponent<Rigidbody>();
+
         //playerCam = GameObject.Find("PlayerCamera").GetComponent<Camera>(); //finds the player camera
 
-        Rigidbody body = GetComponent<Rigidbody>();
-        if(body != null)
-        {
-            body.freezeRotation = true;
-        }
+        //if(body != null)
+        //{
+        //    body.freezeRotation = true;
+        //}
     }
 
     private void Update()
