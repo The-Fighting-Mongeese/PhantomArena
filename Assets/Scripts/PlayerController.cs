@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            gameObject.layer = (gameObject.layer == phantomLayer) ? physicalLayer : phantomLayer;
+            transform.SetAllLayers((gameObject.layer == physicalLayer) ? phantomLayer : physicalLayer);
         }
 	}
 }
