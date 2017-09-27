@@ -21,7 +21,15 @@ public class PlayerController : NetworkBehaviour {
         rb = GetComponent<Rigidbody>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
+        // transform.SetAllLayers(CombineLayers("Phantom", "Physical"));
+        var foo = LayerMask.GetMask("Phantom", "Physical");
+        Debug.Log(foo);
+        transform.SetAllLayers(foo);
+        Debug.Log(test.value);
     }
+
+    float coreHeight = 0.8f;    // from center to top / bottom (actually half height than) 
+    float coreRadius = 0.3f;
 
 
     void Update () {
@@ -35,9 +43,20 @@ public class PlayerController : NetworkBehaviour {
         // rb.velocity = movement;
         transform.Translate(movement);
 
+
+
+        // Warning! Not 100% sure if this mirrors exactly what Physics.CheckCapsule is
+        // DebugExtension.DebugCapsule(transform.position + transform.up * coreHeight / 2, transform.position + transform.up * -coreHeight, coreRadius);
+        
         // Handle phase change 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            if (Physics.CheckCapsule(transform.position + transform.up * coreHeight / 2, transform.position + transform.up * -coreHeight / 2, coreRadius))
+            {
+                // always in something ! (player)
+                Debug.Log("INSIDE SOMETHING");
+            }
+            return;
             // If core is inside something, player is currently phasing through environment. 
             if (core.CoreInside)
             {
@@ -49,6 +68,31 @@ public class PlayerController : NetworkBehaviour {
         }
 	}
 
+    public LayerMask test;
+
+    int CombineLayers(params string[] layers)
+    {
+        int finalLayerMask = 0;
+        foreach (string s in layers)
+        {
+            var layer = LayerMask.NameToLayer(s);
+
+            Debug.Log(layer);
+            finalLayerMask = finalLayerMask | layer;
+            Debug.Log(finalLayerMask);
+        }
+
+        Debug.Log(finalLayerMask);
+        Debug.Log(test.value);
+
+        return finalLayerMask;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        DebugExtension.DrawCapsule(transform.position + (transform.up * coreHeight), transform.position - (transform.up * coreHeight), coreRadius);
+    }
+
     [Command]
     public void CmdRespawn()
     {
@@ -58,10 +102,6 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     public void RpcRespawn()
     {
-        Debug.Log("RPC RESPAWNS");
-        if (isLocalPlayer)  // b/c of local authority. 
-        {
-            transform.position = Vector3.zero;
-        }
+        transform.position = Vector3.zero;
     }
 }
