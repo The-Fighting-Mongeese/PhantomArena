@@ -15,13 +15,19 @@ public class PlayerController : NetworkBehaviour {
 
     private Rigidbody rb;
 
+    private Renderer mesh;
+
     // TODO: Probably move this out or find a better way to cache.
     private int phantomLayer, physicalLayer;
+    // TODO: Probably move this to a static Constant class
+    private Color physicalColor = new Color(174 / 255f, 51 / 255f, 4 / 255f);
+    private Color phantomColor = new Color(37 / 255f, 162 / 255f, 195 / 255f);
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        mesh = GetComponent<Renderer>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
     }
@@ -54,12 +60,15 @@ public class PlayerController : NetworkBehaviour {
                 return;
             }
             
-            // TODO: Check phase change cooldown / resource use 
-            
             // Player is not phasing into environment, allow phase change.
             transform.SetAllLayers((gameObject.layer == physicalLayer) ? phantomLayer : physicalLayer);
+
+            // TODO: Check phase change cooldown / resource use 
+
+            // Change appearance
+            mesh.material.color = (gameObject.layer == physicalLayer) ? physicalColor : phantomColor;
         }
-	}
+    }
 
     [Command]
     public void CmdRespawn()

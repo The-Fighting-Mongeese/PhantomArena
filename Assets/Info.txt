@@ -1,0 +1,4 @@
+Colors
+	Gaia:		#176F1BFF	23,111,27
+	Physical:	#AE1504FF	174,51,4
+	Phantom:	#25A2C37D	37,162,195
