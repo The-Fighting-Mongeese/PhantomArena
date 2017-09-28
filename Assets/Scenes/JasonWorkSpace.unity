@@ -222,10 +222,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  core: {fileID: 0}
-  test:
-    serializedVersion: 2
-    m_Bits: 0
+  coreHeight: 0.8
+  coreRadius: 0.3
 --- !u!114 &311438745
 MonoBehaviour:
   m_ObjectHideFlags: 0

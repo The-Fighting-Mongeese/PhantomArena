@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1541322640426932
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,10 +508,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 9
-  core: {fileID: 114935301505808774}
-  test:
-    serializedVersion: 2
-    m_Bits: 768
+  coreHeight: 0.5
+  coreRadius: 0.3
 --- !u!114 &114728242478644118
 MonoBehaviour:
   m_ObjectHideFlags: 1
