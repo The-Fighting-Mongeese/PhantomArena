@@ -59,14 +59,11 @@ public class PlayerController : NetworkBehaviour {
                 CmdRespawn();
                 return;
             }
-            
-            // Player is not phasing into environment, allow phase change.
-            transform.SetAllLayers((gameObject.layer == physicalLayer) ? phantomLayer : physicalLayer);
 
             // TODO: Check phase change cooldown / resource use 
 
-            // Change appearance
-            mesh.material.color = (gameObject.layer == physicalLayer) ? physicalColor : phantomColor;
+            // All checks ok, change phase
+            CmdChangePhase((gameObject.layer == physicalLayer) ? phantomLayer : physicalLayer);
         }
     }
 
@@ -80,6 +77,27 @@ public class PlayerController : NetworkBehaviour {
     public void RpcRespawn()
     {
         transform.position = Vector3.zero;
+    }
+
+    [Command]
+    public void CmdChangePhase(int layer)
+    {
+        RpcChangePhase(layer);
+    }
+
+    [ClientRpc]
+    public void RpcChangePhase(int layer)
+    {
+        if (layer == physicalLayer)
+        {
+            transform.SetAllLayers(physicalLayer);  // Change layer 
+            mesh.material.color = physicalColor;    // Change appearance
+        }
+        else
+        {
+            transform.SetAllLayers(phantomLayer);
+            mesh.material.color = phantomColor;
+        }
     }
 
     void OnDrawGizmosSelected()
