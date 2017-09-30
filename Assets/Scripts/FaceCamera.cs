@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class FaceCamera : MonoBehaviour {
 
-    public Camera playerCam;
 
     private void LateUpdate()
     {
-        transform.LookAt(transform.position + playerCam.transform.rotation * Vector3.back, 
-            playerCam.transform.rotation * Vector3.down);
+        //transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.back, Camera.main.transform.rotation * Vector3.down);
+        transform.LookAt(Camera.main.transform);
     }
 
 }
