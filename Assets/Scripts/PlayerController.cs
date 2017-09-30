@@ -48,7 +48,7 @@ public class PlayerController : NetworkBehaviour {
         if (Input.GetKeyDown(KeyCode.P))
         {
             Health s = GetComponent<Health>();
-            s.TakeTrueDamage(1);
+            s.CmdTakeTrueDamage(1);
         }
 
         // Handle phase change 
