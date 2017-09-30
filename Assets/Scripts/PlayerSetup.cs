@@ -6,6 +6,7 @@ public class PlayerSetup : NetworkBehaviour {
     [SerializeField]
     Behaviour[] componentsToDisable;
 
+
     private void Start()
     {
         if (!isLocalPlayer) //if this object isn't controlled by the system, then we have to disable all the components.

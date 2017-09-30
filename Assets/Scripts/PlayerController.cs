@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
+
+[RequireComponent(typeof(Health))]
 public class PlayerController : NetworkBehaviour {
 
     [SerializeField]
@@ -13,7 +15,7 @@ public class PlayerController : NetworkBehaviour {
     [SerializeField]
     float coreRadius = 0.3f;
 
-    private Rigidbody rb;
+    //private Rigidbody rb;
 
     private Renderer mesh;
 
@@ -26,7 +28,7 @@ public class PlayerController : NetworkBehaviour {
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
         mesh = GetComponent<Renderer>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
@@ -42,6 +44,12 @@ public class PlayerController : NetworkBehaviour {
         movement = Vector3.ClampMagnitude(movement, speed);     // limits diagonal movement to the same speed as movement along an axis
         movement *= Time.deltaTime;
         transform.Translate(movement);                          // TODO: Change to force or velocity changing, or move to FixedUpdate to prevent going into walls. 
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Health s = GetComponent<Health>();
+            s.CmdTakeTrueDamage(1);
+        }
 
         // Handle phase change 
         if (Input.GetKeyDown(KeyCode.F))
