@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: -822479833, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NetworkPort: 7777
+  m_NetworkPort: 666
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
   m_NetworkAddress: localhost
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1018684567261116, guid: 24858e20ba5f93f4ab64515970c301d9,
+  m_PlayerPrefab: {fileID: 1680521405161222, guid: 24858e20ba5f93f4ab64515970c301d9,
     type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
