@@ -13,7 +13,7 @@ public class PlayerController : NetworkBehaviour {
     [SerializeField]
     float coreRadius = 0.3f;
 
-    private Rigidbody rb;
+    //private Rigidbody rb;
 
     private Renderer mesh;
 
@@ -26,7 +26,7 @@ public class PlayerController : NetworkBehaviour {
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
         mesh = GetComponent<Renderer>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");

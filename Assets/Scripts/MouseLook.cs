@@ -14,7 +14,7 @@ public class MouseLook : NetworkBehaviour {
 
     private void Start()
     {
-        Rigidbody body = GetComponent<Rigidbody>();
+        //Rigidbody body = GetComponent<Rigidbody>();
 
         //playerCam = GameObject.Find("PlayerCamera").GetComponent<Camera>(); //finds the player camera
 
