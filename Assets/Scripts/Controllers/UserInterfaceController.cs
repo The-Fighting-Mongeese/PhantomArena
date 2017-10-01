@@ -22,8 +22,8 @@ public class UserInterfaceController : MonoBehaviour {
     {
         if (canvasGroup == null) return;
         canvasGroup.alpha = 0f;
+        nameInput.enabled = false;
         canvasGroup.blocksRaycasts = false; //prevents the ui from receiving input events
-        //nameInput.gameObject.SetActive(false);
 
     }
 
@@ -31,8 +31,8 @@ public class UserInterfaceController : MonoBehaviour {
     {
         if (canvasGroup == null) return;
         canvasGroup.alpha = 1f;
+        nameInput.enabled = true;
         canvasGroup.blocksRaycasts = true;
-        //nameInput.gameObject.SetActive(true);
     }
 
     public void ToggleChatBox()

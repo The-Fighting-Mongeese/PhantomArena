@@ -346,6 +346,7 @@ GameObject:
   - component: {fileID: 224983689706670786}
   - component: {fileID: 222162977678503390}
   - component: {fileID: 114048204939692820}
+  - component: {fileID: 225245895951044528}
   m_Layer: 5
   m_Name: ChatPanel
   m_TagString: Untagged
@@ -1809,6 +1810,17 @@ RectTransform:
   m_AnchoredPosition: {x: 239.40002, y: 129.8}
   m_SizeDelta: {x: 478.7, y: 259.7}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &225245895951044528
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1862352065330036}
+  m_Enabled: 1
+  m_Alpha: 0.7
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!225 &225343884894759900
 CanvasGroup:
   m_ObjectHideFlags: 1

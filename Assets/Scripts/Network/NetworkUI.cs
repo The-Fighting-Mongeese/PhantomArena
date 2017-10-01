@@ -26,7 +26,8 @@ public class NetworkUI : MonoBehaviour
         lobbyCamera = GameObject.Find("LobbyCamera").GetComponent<Camera>();
     }
 
-   void Update()
+
+    void Update()
     {
         if (!showGUI)
             return;
@@ -41,6 +42,7 @@ public class NetworkUI : MonoBehaviour
                     {
                         lobbyCamera.gameObject.SetActive(false);
                         manager.StartHost();
+                        GameObject.Find("_GameManager").GetComponent<HealthPackSpawner>().CmdSpawnHealthPack();
                     }
                     else UserInterfaceController.nameInput.placeholder.GetComponent<Text>().text = "Name cannot be blank";
                 }
@@ -60,6 +62,7 @@ public class NetworkUI : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.X))
             {
                 manager.StopHost();
+                UserInterfaceController.TransitionToLobbyUI();
                 lobbyCamera.gameObject.SetActive(true);
             }
         }
@@ -89,6 +92,7 @@ public class NetworkUI : MonoBehaviour
                         {
                             lobbyCamera.gameObject.SetActive(false);
                             manager.StartHost();
+                            GameObject.Find("_GameManager").GetComponent<HealthPackSpawner>().CmdSpawnHealthPack();
                         }
                         else UserInterfaceController.nameInput.placeholder.GetComponent<Text>().text = "Name cannot be blank";
                     }
@@ -165,6 +169,7 @@ public class NetworkUI : MonoBehaviour
             if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Stop (X)"))
             {
                 manager.StopHost();
+                UserInterfaceController.TransitionToLobbyUI();
                 lobbyCamera.gameObject.SetActive(true);
             }
             ypos += spacing;
@@ -185,7 +190,19 @@ public class NetworkUI : MonoBehaviour
 
     private bool NameIsValid()
     {
-        return (UserInterfaceController.nameInput.text != null && UserInterfaceController.nameInput.text.Length > 0);
+        return (UserInterfaceController.nameInput.text != null && UserInterfaceController.nameInput.text.Length > 0 && UserInterfaceController.nameInput.text.Length < 30);
+    }
+
+
+    void OnDisconnectedFromServer(NetworkDisconnection info)
+    {
+        if (Network.isServer)
+            Debug.Log("Local server connection disconnected");
+        else
+            if (info == NetworkDisconnection.LostConnection)
+            Debug.Log("Lost connection to the server");
+        else
+            Debug.Log("Successfully diconnected from the server");
     }
 
 }
