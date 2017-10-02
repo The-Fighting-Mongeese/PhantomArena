@@ -26,7 +26,7 @@ public class Stamina : MonoBehaviour {
     //tries to use stamina, returns whether it was successful
     public bool TryUseStamina(int amount)
     {
-        if (current_stamina > amount)
+        if (current_stamina >= amount)
         {
             current_stamina -= amount;
             time_last_stamina_use = Time.fixedTime;
