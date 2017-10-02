@@ -4,6 +4,8 @@ using UnityEngine.Networking;
 
 
 [RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Stamina))]
+[RequireComponent(typeof(Mana))]
 public class PlayerController : NetworkBehaviour {
 
     [SerializeField]
@@ -49,6 +51,21 @@ public class PlayerController : NetworkBehaviour {
         {
             Health s = GetComponent<Health>();
             s.CmdTakeTrueDamage(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Stamina m = GetComponent<Stamina>();
+            if (m.TryUseStamina(50))
+            {
+                transform.Translate(deltaX, 0, deltaZ);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Mana m = GetComponent<Mana>();
+            m.TryUseMana(50);
         }
 
         // Handle phase change 
