@@ -22,6 +22,7 @@ public class Health : NetworkBehaviour
     
     void OnChangeHealth(int health)
     {
+        currentHealth = health;
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
         //print("change hp: " + currentHealth + " / " + maxHealth + " divided=" +(float)currentHealth / maxHealth);
@@ -64,9 +65,15 @@ public class Health : NetworkBehaviour
         {
             //die
             currentHealth = maxHealth; //heal
-            RpcRespawn();
+            CmdRespawn();
         }
         
+    }
+
+    [Command]
+    void CmdRespawn()
+    {
+        RpcRespawn();
     }
 
     [ClientRpc]
