@@ -25,10 +25,8 @@ public class PlayerController : NetworkBehaviour {
     private Color physicalColor = new Color(174 / 255f, 51 / 255f, 4 / 255f);
     private Color phantomColor = new Color(37 / 255f, 162 / 255f, 195 / 255f);
 
-
     void Start()
     {
-        //rb = GetComponent<Rigidbody>();
         mesh = GetComponent<Renderer>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
