@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Chat : NetworkBehaviour {
 
     public Text chatText;
+    public Text playerNameText;
     public InputField inputField, nameInput;
     public static List<string> messageList = new List<string>();
 
@@ -14,6 +15,7 @@ public class Chat : NetworkBehaviour {
 
     public PlayerProfile currentProfile;
     PlayerProfileController playerProfileController;
+    public string pName = "";
 
     private void Start()
     {
@@ -28,12 +30,6 @@ public class Chat : NetworkBehaviour {
         CmdGetPlayerProfile(nameInput.text);
         UserInterfaceController.TransitionToGameUI();
     }
-
-    private void OnDestroy()
-    {
-        UserInterfaceController.TransitionToLobbyUI();
-    }
-
 
     [Command]
     void CmdGetPlayerProfile(string name)
@@ -51,6 +47,9 @@ public class Chat : NetworkBehaviour {
         currentProfile.Id = id;
         currentProfile.Name = name;
         currentProfile.Level = level;
+        this.pName = currentProfile.Name;
+        playerNameText.text = currentProfile.Name;
+        print("this name: " + pName);
     }
 
     [Command]
