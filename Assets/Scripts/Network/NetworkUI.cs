@@ -1,6 +1,7 @@
 ﻿using UnityEngine.Networking;
 using UnityEngine;
 using System.ComponentModel;
+using UnityEngine.UI;
 
 [AddComponentMenu("Network/NetworkManagerHUD")]
 [RequireComponent(typeof(NetworkManager))]
@@ -12,15 +13,20 @@ public class NetworkUI : MonoBehaviour
     [SerializeField] public int offsetX;
     [SerializeField] public int offsetY;
 
+    //public InputField nameInput;
+    Camera lobbyCamera;
+
     // Runtime variable
     bool m_ShowServer;
 
     void Awake()
     {
         manager = GetComponent<NetworkManager>();
+        //nameInput = GameObject.Find("nameInputField").GetComponent<InputField>();
+        lobbyCamera = GameObject.Find("LobbyCamera").GetComponent<Camera>();
     }
 
-    void Update()
+   void Update()
     {
         if (!showGUI)
             return;
@@ -29,18 +35,24 @@ public class NetworkUI : MonoBehaviour
         {
             if (UnityEngine.Application.platform != RuntimePlatform.WebGLPlayer)
             {
-                if (Input.GetKeyDown(KeyCode.S))
-                {
-                    manager.StartServer();
-                }
                 if (Input.GetKeyDown(KeyCode.H))
                 {
-                    manager.StartHost();
+                    if (NameIsValid())
+                    {
+                        lobbyCamera.gameObject.SetActive(false);
+                        manager.StartHost();
+                    }
+                    else UserInterfaceController.nameInput.placeholder.GetComponent<Text>().text = "Name cannot be blank";
                 }
             }
             if (Input.GetKeyDown(KeyCode.C))
             {
-                manager.StartClient();
+                if (NameIsValid())
+                {
+                    lobbyCamera.gameObject.SetActive(false);
+                    manager.StartClient();
+                }
+                else UserInterfaceController.nameInput.placeholder.GetComponent<Text>().text = "Name cannot be blank";
             }
         }
         if (NetworkServer.active && manager.IsClientConnected())
@@ -48,6 +60,7 @@ public class NetworkUI : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.X))
             {
                 manager.StopHost();
+                lobbyCamera.gameObject.SetActive(true);
             }
         }
     }
@@ -72,14 +85,24 @@ public class NetworkUI : MonoBehaviour
                 {
                     if (GUI.Button(new Rect(xpos, ypos, 200, 20), "LAN Host(H)"))
                     {
-                        manager.StartHost();
+                        if (NameIsValid())
+                        {
+                            lobbyCamera.gameObject.SetActive(false);
+                            manager.StartHost();
+                        }
+                        else UserInterfaceController.nameInput.placeholder.GetComponent<Text>().text = "Name cannot be blank";
                     }
                     ypos += spacing;
                 }
 
                 if (GUI.Button(new Rect(xpos, ypos, 105, 20), "LAN Client(C)"))
                 {
-                    manager.StartClient();
+                    if (NameIsValid())
+                    {
+                        lobbyCamera.gameObject.SetActive(false);
+                        manager.StartClient();
+                    }
+                    else UserInterfaceController.nameInput.placeholder.GetComponent<Text>().text = "Name cannot be blank";
                 }
 
                 manager.networkAddress = GUI.TextField(new Rect(xpos + 100, ypos, 95, 20), manager.networkAddress);
@@ -89,14 +112,6 @@ public class NetworkUI : MonoBehaviour
                 {
                     // cant be a server in webgl build
                     GUI.Box(new Rect(xpos, ypos, 200, 25), "(  WebGL cannot be server  )");
-                    ypos += spacing;
-                }
-                else
-                {
-                    if (GUI.Button(new Rect(xpos, ypos, 200, 20), "LAN Server Only(S)"))
-                    {
-                        manager.StartServer();
-                    }
                     ypos += spacing;
                 }
             }
@@ -150,6 +165,7 @@ public class NetworkUI : MonoBehaviour
             if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Stop (X)"))
             {
                 manager.StopHost();
+                lobbyCamera.gameObject.SetActive(true);
             }
             ypos += spacing;
         }
@@ -164,6 +180,12 @@ public class NetworkUI : MonoBehaviour
                 return;
             }
         }
+    }
+
+
+    private bool NameIsValid()
+    {
+        return (UserInterfaceController.nameInput.text != null && UserInterfaceController.nameInput.text.Length > 0);
     }
 
 }
