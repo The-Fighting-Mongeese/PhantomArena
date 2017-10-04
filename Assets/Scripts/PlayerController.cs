@@ -27,9 +27,13 @@ public class PlayerController : NetworkBehaviour {
     private Color physicalColor = new Color(174 / 255f, 51 / 255f, 4 / 255f);
     private Color phantomColor = new Color(37 / 255f, 162 / 255f, 195 / 255f);
 
+
+    private Rigidbody rb; 
+
     void Start()
     {
         mesh = GetComponent<Renderer>();
+        rb = GetComponent<Rigidbody>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
     }
@@ -40,10 +44,6 @@ public class PlayerController : NetworkBehaviour {
         //if (!isLocalPlayer) return;
         float deltaX = Input.GetAxis("Horizontal") * speed;
         float deltaZ = Input.GetAxis("Vertical") * speed;
-        Vector3 movement = new Vector3(deltaX, 0, deltaZ);
-        movement = Vector3.ClampMagnitude(movement, speed);     // limits diagonal movement to the same speed as movement along an axis
-        movement *= Time.deltaTime;
-        transform.Translate(movement);                          // TODO: Change to force or velocity changing, or move to FixedUpdate to prevent going into walls. 
 
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -88,6 +88,20 @@ public class PlayerController : NetworkBehaviour {
             // All checks ok, change phase
             CmdChangePhase((gameObject.layer == physicalLayer) ? phantomLayer : physicalLayer);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        float deltaX = Input.GetAxis("Horizontal") * speed;
+        float deltaZ = Input.GetAxis("Vertical") * speed;
+        float currentY = rb.velocity.y;
+
+        Vector3 forwardVel = transform.forward * speed * deltaZ;
+        Vector3 horizontalVel = transform.right * speed * deltaX;
+        Vector3 movement = Vector3.ClampMagnitude(forwardVel + horizontalVel, speed);
+        movement.y = currentY;
+
+        rb.velocity = movement;
     }
 
     [Command]
