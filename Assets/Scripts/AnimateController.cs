@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class AnimationController : NetworkBehaviour {
+public class AnimateController : NetworkBehaviour {
 
     public Animator anim;
     NetworkAnimator networkAnimator;
@@ -20,8 +20,7 @@ public class AnimationController : NetworkBehaviour {
         {
             float movement = Input.GetAxisRaw("Vertical") + Input.GetAxisRaw("Horizontal");
 
-
-            if (movement > 0.1)
+            if (movement != 0)
             {
                 //anim.Play ("Dude Walk", -1, 0.0f); from beginning
                 anim.SetFloat("speed", 1.0f);
@@ -30,8 +29,8 @@ public class AnimationController : NetworkBehaviour {
             {
                 anim.SetFloat("speed", 0.0f);
                 //anim.Play("Idle"); anim.SetFloat("speed", 1.0f);
-
             }
+
         }
         else
         {

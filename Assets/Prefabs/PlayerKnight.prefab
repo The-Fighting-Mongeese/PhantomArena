@@ -48,11 +48,11 @@ GameObject:
   - component: {fileID: 114301522757875646}
   - component: {fileID: 114270028652358404}
   - component: {fileID: 23782888197906050}
-  - component: {fileID: 114151745032318758}
   - component: {fileID: 114932708440584032}
+  - component: {fileID: 114424227352090532}
   m_Layer: 9
   m_Name: PlayerKnight
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2969,18 +2969,6 @@ MonoBehaviour:
   lookSensitivity: 5
   rotationX: 0
   playerCam: {fileID: 20004361598508812}
---- !u!114 &114151745032318758
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1006755277417678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 608c2e8f58ad2cf4185a2255d8841d33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anim: {fileID: 95669913468902734}
 --- !u!114 &114216346954865302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3012,6 +3000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chatText: {fileID: 0}
+  playerNameText: {fileID: 114104700226836900}
   inputField: {fileID: 0}
   nameInput: {fileID: 0}
   maxChatlogCount: 100
@@ -3046,8 +3035,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  coreHeight: 0.5
-  coreRadius: 0.3
+  coreHeight: 1
+  coreRadius: 0.6
 --- !u!114 &114405840961952836
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3090,6 +3079,18 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114424227352090532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1006755277417678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d097621947691fd41be0f2883948aff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 95669913468902734}
 --- !u!114 &114496854504897018
 MonoBehaviour:
   m_ObjectHideFlags: 1
