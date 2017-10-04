@@ -26,7 +26,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1004979779925344
 GameObject:
   m_ObjectHideFlags: 1
@@ -986,7 +986,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224017910235234272}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1745,8 +1745,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114991319423878014}
   m_HandleRect: {fileID: 224856884520219116}
   m_Direction: 2
-  m_Value: 0.00000013385741
-  m_Size: 0.20205
+  m_Value: 0.43008792
+  m_Size: 0.20204999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2094,11 +2094,11 @@ RectTransform:
   m_Father: {fileID: 224160614746846742}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 590, y: 310}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 1}
 --- !u!224 &224160614746846742
 RectTransform:
   m_ObjectHideFlags: 1
@@ -2230,7 +2230,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00007343292, y: 797.9499}
+  m_AnchoredPosition: {x: 0.0000019073486, y: 454.76135}
   m_SizeDelta: {x: 0, y: 1000}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224410787342345582
@@ -2492,11 +2492,11 @@ RectTransform:
   m_Father: {fileID: 224160614746846742}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1245, y: -450}
-  m_SizeDelta: {x: 68.19, y: 25}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -90}
+  m_SizeDelta: {x: 68.18994, y: 25}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &224804740657685224
 RectTransform:
   m_ObjectHideFlags: 1
