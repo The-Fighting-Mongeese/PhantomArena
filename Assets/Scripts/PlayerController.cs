@@ -27,13 +27,15 @@ public class PlayerController : NetworkBehaviour {
     private Color physicalColor = new Color(174 / 255f, 51 / 255f, 4 / 255f);
     private Color phantomColor = new Color(37 / 255f, 162 / 255f, 195 / 255f);
 
+    private Rigidbody rb;
+    private Health health; 
 
-    private Rigidbody rb; 
 
     void Start()
     {
         mesh = GetComponent<Renderer>();
         rb = GetComponent<Rigidbody>();
+        health = GetComponent<Health>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
     }
@@ -69,24 +71,7 @@ public class PlayerController : NetworkBehaviour {
         // Handle phase change 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            // Check if player is phasing into environment
-            var objectsInCore = Physics.OverlapCapsule(
-                transform.position + transform.up * coreHeight / 2, 
-                transform.position + transform.up * -coreHeight / 2, 
-                coreRadius);
-
-            if (objectsInCore.Length > 1)  // there will always be one for the player
-            {
-                Debug.Log("Player is phasing into something.");
-                // TODO: Kill player
-                CmdRespawn();
-                return;
-            }
-
-            // TODO: Check phase change cooldown / resource use 
-
-            // All checks ok, change phase
-            CmdChangePhase((gameObject.layer == physicalLayer) ? phantomLayer : physicalLayer);
+            AttemptPhaseChange();
         }
     }
 
@@ -102,18 +87,6 @@ public class PlayerController : NetworkBehaviour {
         movement.y = currentY;
 
         rb.velocity = movement;
-    }
-
-    [Command]
-    public void CmdRespawn()
-    {
-        RpcRespawn();
-    }
-
-    [ClientRpc]
-    public void RpcRespawn()
-    {
-        transform.position = Vector3.zero;
     }
 
     [Command]
@@ -135,6 +108,32 @@ public class PlayerController : NetworkBehaviour {
             transform.SetAllLayers(phantomLayer);
             mesh.material.color = phantomColor;
         }
+    }
+
+    private bool AttemptPhaseChange()
+    {
+        // Check if player is phasing into something
+        var objectsInCore = Physics.OverlapCapsule(
+            transform.position + transform.up * coreHeight / 2,
+            transform.position + transform.up * -coreHeight / 2,
+            coreRadius);
+
+        // Die if phasing into something other than a player (eg. environment) 
+        foreach (var o in objectsInCore)
+        {
+            if (!o.CompareTag("Player"))
+            {
+                health.CmdTakeTrueDamage(1000);
+                return false;
+            }
+        }
+
+        // TODO: Check phase change cooldown / resource use 
+
+        // All checks ok, change phase
+        CmdChangePhase((gameObject.layer == physicalLayer) ? phantomLayer : physicalLayer);
+
+        return true;
     }
 
     void OnDrawGizmosSelected()
