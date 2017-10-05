@@ -45,6 +45,8 @@ GameObject:
   - component: {fileID: 114128315016635690}
   - component: {fileID: 114337578760235208}
   - component: {fileID: 114496854504897018}
+  - component: {fileID: 114961480891704972}
+  - component: {fileID: 114160128168386774}
   - component: {fileID: 114301522757875646}
   - component: {fileID: 114270028652358404}
   - component: {fileID: 23782888197906050}
@@ -2969,6 +2971,17 @@ MonoBehaviour:
   lookSensitivity: 5
   rotationX: 0
   playerCam: {fileID: 20004361598508812}
+--- !u!114 &114160128168386774
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1006755277417678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42177d3e6a823da4facd2fe345c8c519, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114216346954865302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3260,6 +3273,17 @@ MonoBehaviour:
   param3: 
   param4: 
   param5: 
+--- !u!114 &114961480891704972
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1006755277417678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5545ec2a65152f940813f105e38ec973, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114965052080507390
 MonoBehaviour:
   m_ObjectHideFlags: 1

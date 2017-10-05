@@ -12,9 +12,12 @@ public class Health : NetworkBehaviour
     [SyncVar(hook ="OnChangeHealth")]
     public int currentHealth;
 
+    private UIBar _healthBar;
 
     private void Awake()
     {
+        _healthBar = GameObject.Find("HealthBar").GetComponent<UIBar>();
+        _healthBar.Init(maxHealth);
         currentHealth = maxHealth;
         hpText.text = currentHealth + "/" + maxHealth;
     }
@@ -25,6 +28,7 @@ public class Health : NetworkBehaviour
         currentHealth = health;
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
+        _healthBar.UpdateUI(health);
         //print("change hp: " + currentHealth + " / " + maxHealth + " divided=" +(float)currentHealth / maxHealth);
     }
 
