@@ -6,11 +6,14 @@ public class Mana : MonoBehaviour {
     const float RECHARGE_RATE = 4;
     private float current_mana;
     private float time_last_mana_use;
+    private UIBar _manaBar;
 
     private void Awake()
     {
         time_last_mana_use = Time.fixedTime;
         current_mana = MAX_MANA;
+        _manaBar = GameObject.Find("ManaBar").GetComponent<UIBar>();
+        _manaBar.Init(MAX_MANA);
     }
 
     public void Update()
@@ -20,6 +23,7 @@ public class Mana : MonoBehaviour {
         if (Time.fixedTime - time_last_mana_use - RECHARGE_DELAY > 0)
         {
             current_mana = Mathf.MoveTowards(current_mana, MAX_MANA, Time.deltaTime * RECHARGE_RATE);
+            _manaBar.UpdateUI(current_mana);
         }
     }
 
@@ -30,6 +34,7 @@ public class Mana : MonoBehaviour {
         {
             current_mana -= amount;
             time_last_mana_use = Time.fixedTime;
+            _manaBar.UpdateUI(current_mana);
             Debug.Log("used " + amount + " mana. " + current_mana + " mana remaining.");
             return true;
         }

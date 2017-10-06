@@ -7,10 +7,14 @@ public class Stamina : MonoBehaviour {
     private float current_stamina;
     private float time_last_stamina_use;
 
+    private UIBar _staminaBar;
+
     private void Awake()
     {
         time_last_stamina_use = Time.fixedTime;
         current_stamina = MAX_STAMINA;
+        _staminaBar = GameObject.Find("StaminaBar").GetComponent<UIBar>();
+        _staminaBar.Init(MAX_STAMINA);
     }
 
     public void Update()
@@ -20,6 +24,7 @@ public class Stamina : MonoBehaviour {
         if (Time.fixedTime - time_last_stamina_use - RECHARGE_DELAY > 0)
         {
             current_stamina = Mathf.MoveTowards(current_stamina, MAX_STAMINA, Time.deltaTime * RECHARGE_RATE);
+            _staminaBar.UpdateUI(current_stamina);
         }
     }
 
@@ -30,6 +35,7 @@ public class Stamina : MonoBehaviour {
         {
             current_stamina -= amount;
             time_last_stamina_use = Time.fixedTime;
+            _staminaBar.UpdateUI(current_stamina);
             Debug.Log("used " + amount + " stamina. " + current_stamina + " stamina remaining.");
             return true;
         }
