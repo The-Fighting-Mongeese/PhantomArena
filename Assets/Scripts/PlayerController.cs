@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Stamina))]
 [RequireComponent(typeof(Mana))]
 public class PlayerController : NetworkBehaviour {
+    private float JUMP_DURATION = 1.0f;
 
     [SerializeField]
     private float speed = 10.0f;
@@ -42,24 +43,10 @@ public class PlayerController : NetworkBehaviour {
 
     void Update ()
     {
-        // Handle movement 
-        //if (!isLocalPlayer) return;
-        float deltaX = Input.GetAxis("Horizontal") * speed;
-        float deltaZ = Input.GetAxis("Vertical") * speed;
-
         if (Input.GetKeyDown(KeyCode.P))
         {
             Health s = GetComponent<Health>();
             s.CmdTakeTrueDamage(20);
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            Stamina m = GetComponent<Stamina>();
-            if (m.TryUseStamina(50))
-            {
-                transform.Translate(deltaX, 0, deltaZ);
-            }
         }
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -77,16 +64,19 @@ public class PlayerController : NetworkBehaviour {
 
     private void FixedUpdate()
     {
-        float deltaX = Input.GetAxis("Horizontal") * speed;
-        float deltaZ = Input.GetAxis("Vertical") * speed;
-        float currentY = rb.velocity.y;
-
-        Vector3 forwardVel = transform.forward * speed * deltaZ;
-        Vector3 horizontalVel = transform.right * speed * deltaX;
-        Vector3 movement = Vector3.ClampMagnitude(forwardVel + horizontalVel, speed);
-        movement.y = currentY;
-
-        rb.velocity = movement;
+        if (IsGrounded())
+        {
+            Vector3 vel = (transform.forward * Input.GetAxisRaw("Vertical") + transform.right * Input.GetAxisRaw("Horizontal")).normalized * speed;
+            if (Input.GetKey(KeyCode.Space))
+            {
+                vel.y = 9.81f * 0.5f * JUMP_DURATION;
+            }
+            else
+            {
+                vel.y = rb.velocity.y;
+            }
+            rb.velocity = vel;
+        }
     }
 
     [Command]
@@ -140,6 +130,11 @@ public class PlayerController : NetworkBehaviour {
     {
         // Drawing core bounds (Note: the calculations are correct, do not use half coreHeight)
         DebugExtension.DrawCapsule(transform.position + (transform.up * coreHeight), transform.position - (transform.up * coreHeight), coreRadius);
+    }
+
+    bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f);
     }
 }
 
