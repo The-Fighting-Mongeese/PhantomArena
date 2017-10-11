@@ -77,10 +77,12 @@ public class PlayerController : NetworkBehaviour {
 
     private void FixedUpdate()
     {
+        // Retrieve inputs 
         float deltaX = Input.GetAxis("Horizontal") * speed;
         float deltaZ = Input.GetAxis("Vertical") * speed;
         float currentY = rb.velocity.y;
 
+        // Apply movement 
         Vector3 forwardVel = transform.forward * speed * deltaZ;
         Vector3 horizontalVel = transform.right * speed * deltaX;
         Vector3 movement = Vector3.ClampMagnitude(forwardVel + horizontalVel, speed);
