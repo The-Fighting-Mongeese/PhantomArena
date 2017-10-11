@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 
 public class Stamina : MonoBehaviour {
+
+    public float CurrentStamina { get { return current_stamina; } }
+
     const int MAX_STAMINA = 100;
     const float RECHARGE_DELAY = 1;
     const float RECHARGE_RATE = 4;

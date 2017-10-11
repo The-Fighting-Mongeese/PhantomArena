@@ -33,6 +33,17 @@ public class PlayerController : NetworkBehaviour {
     private Health health;
     private AnimateController ac;
 
+    [SerializeField]
+    private Skill basicAttack;
+    [SerializeField]
+    private Skill firstSkill;
+    [SerializeField]
+    private Skill secondSkill;
+    [SerializeField]
+    private Skill thirdSkill;
+
+    private Skill currentSkill;
+
 
     void Start()
     {
@@ -81,17 +92,27 @@ public class PlayerController : NetworkBehaviour {
         // attack / skill detection
         if (Input.GetButtonDown("Fire1"))
         {
-            ac.CmdNetworkedTrigger("Attack1Trigger");
+            if (basicAttack.ConditionsMet())
+            {
+                ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
+                basicAttack.ConsumeResources();
+                currentSkill = basicAttack;
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha1))
+        else if (Input.GetButtonDown("Skill1"))
+        {
+            if (firstSkill.ConditionsMet())
+            {
+                ac.CmdNetworkedTrigger("SkillStrongAttackTrigger"); // TODO: Move to skill
+                firstSkill.ConsumeResources();
+                currentSkill = firstSkill;
+            }
+        }
+        else if (Input.GetButtonDown("Skill2"))
         {
             ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetButtonDown("Skill3"))
         {
             ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
         }
@@ -150,13 +171,15 @@ public class PlayerController : NetworkBehaviour {
             return;
         weapon.OnOpponentTrigger -= OnWeaponEnter;
         weapon.DeactivateCollider();
+        currentSkill = null;
     }
 
     public void OnWeaponEnter(GameObject other)
     {
         if (!isLocalPlayer)
             return;
-        other.GetComponent<Health>().CmdTakeTrueDamage(20);
+        // other.GetComponent<Health>().CmdTakeTrueDamage(20);
+        currentSkill.Activate(other);
     }
 
     private bool AttemptPhaseChange()

@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 
 public class Mana : MonoBehaviour {
+
+    public float CurrentMana { get { return current_mana; } }
+
     const int MAX_MANA = 100;
     const float RECHARGE_DELAY = 1;
     const float RECHARGE_RATE = 4;
