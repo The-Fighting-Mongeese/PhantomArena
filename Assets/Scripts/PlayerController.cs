@@ -8,6 +8,8 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Mana))]
 public class PlayerController : NetworkBehaviour {
 
+    public WeaponCollider weapon;
+
     [SerializeField]
     private float speed = 10.0f;
 
@@ -28,7 +30,8 @@ public class PlayerController : NetworkBehaviour {
     private Color phantomColor = new Color(37 / 255f, 162 / 255f, 195 / 255f);
 
     private Rigidbody rb;
-    private Health health; 
+    private Health health;
+    private AnimateController ac;
 
 
     void Start()
@@ -36,6 +39,7 @@ public class PlayerController : NetworkBehaviour {
         mesh = GetComponent<Renderer>();
         rb = GetComponent<Rigidbody>();
         health = GetComponent<Health>();
+        ac = GetComponent<AnimateController>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
     }
@@ -72,6 +76,24 @@ public class PlayerController : NetworkBehaviour {
         if (Input.GetKeyDown(KeyCode.F))
         {
             AttemptPhaseChange();
+        }
+
+        // attack / skill detection
+        if (Input.GetButtonDown("Fire1"))
+        {
+            ac.CmdNetworkedTrigger("Attack1Trigger");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
         }
     }
 
@@ -110,6 +132,31 @@ public class PlayerController : NetworkBehaviour {
             transform.SetAllLayers(phantomLayer);
             mesh.material.color = phantomColor;
         }
+    }
+
+    // Note: Called from animation clip
+    public void AnimEvent_ColliderActivate()
+    {
+        if (!isLocalPlayer)
+            return;
+        weapon.OnOpponentTrigger += OnWeaponEnter;
+        weapon.ActivateCollider();
+    }
+
+    // Note: Called from animation clip
+    public void AnimEvent_ColliderDeactivate()
+    {
+        if (!isLocalPlayer)
+            return;
+        weapon.OnOpponentTrigger -= OnWeaponEnter;
+        weapon.DeactivateCollider();
+    }
+
+    public void OnWeaponEnter(GameObject other)
+    {
+        if (!isLocalPlayer)
+            return;
+        other.GetComponent<Health>().CmdTakeTrueDamage(20);
     }
 
     private bool AttemptPhaseChange()

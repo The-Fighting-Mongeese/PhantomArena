@@ -38,25 +38,6 @@ public class AnimateController : NetworkBehaviour {
                 anim.SetBool("Running", false);
             }
 
-            // attack / skill detection
-            if (Input.GetButtonDown("Fire1"))
-            {
-                Debug.Log("Fire1 called from server " + isServer);
-                CmdNetworkedTrigger("Attack1Trigger");
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                CmdNetworkedTrigger("SkillStrongAttackTrigger");
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                CmdNetworkedTrigger("SkillStrongAttackTrigger");
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                CmdNetworkedTrigger("SkillForceChangeTrigger");
-            }
-
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
                 anim.SetBool("Dead", !anim.GetBool("Dead"));
