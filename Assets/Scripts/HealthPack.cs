@@ -4,34 +4,23 @@ using System.Collections;
 //daniel
 public class HealthPack : MonoBehaviour {
 
-    int ticks = 50;
-    int flag = 0, flagDown;
+    const float ROTATION_SPEED = 45f;
+    const float VERTICAL_BOB_FREQUENCY = 0.5f;
+    const float VERTICAL_BOB_MAGNITUDE = 0.5f;
+    const float VERTICAL_OFFSET = 1f;
+    private Vector3 startingPosition;
 
-    private void Awake()
+    private void Start()
     {
-        flagDown = ticks;
+        startingPosition = transform.position;
     }
 
     private void Update()
     {
-        transform.Rotate(0, 0, 45f * Time.deltaTime);
-
-        if(flag < ticks)
-        {
-            transform.Translate(Vector3.up * 1 * Time.deltaTime, Space.World);
-            flag++;
-        }
-        else if(flag >= ticks)
-        {
-            transform.Translate(Vector3.down * 1 * Time.deltaTime, Space.World);
-            if(flagDown-- <= 0 || transform.position.y < 0.1)
-            {
-                flag = 0;
-                flagDown = ticks;
-            }
-        }
-
-        
+        transform.Rotate(0, 0, ROTATION_SPEED * (Time.deltaTime));
+        Vector3 pos = startingPosition;
+        pos.y += VERTICAL_BOB_MAGNITUDE * Mathf.Sin(Time.fixedTime * 2 * Mathf.PI * VERTICAL_BOB_FREQUENCY) + VERTICAL_OFFSET;
+        transform.position = pos;
     }
 
 
