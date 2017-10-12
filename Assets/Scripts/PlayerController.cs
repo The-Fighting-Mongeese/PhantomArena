@@ -107,16 +107,19 @@ public class PlayerController : NetworkBehaviour {
 
     private void FixedUpdate()
     {
-        float deltaX = Input.GetAxis("Horizontal") * speed;
-        float deltaZ = Input.GetAxis("Vertical") * speed;
-        float currentY = rb.velocity.y;
-
-        Vector3 forwardVel = transform.forward * speed * deltaZ;
-        Vector3 horizontalVel = transform.right * speed * deltaX;
-        Vector3 movement = Vector3.ClampMagnitude(forwardVel + horizontalVel, speed);
-        movement.y = currentY;
-
-        rb.velocity = movement;
+        if (IsGrounded())
+        {
+            Vector3 vel = (transform.forward * Input.GetAxisRaw("Vertical") + transform.right * Input.GetAxisRaw("Horizontal")).normalized * speed;
+            if (Input.GetKey(KeyCode.Space))
+            {
+                vel.y = 9.81f * 0.5f * JUMP_DURATION;
+            }
+            else
+            {
+                vel.y = rb.velocity.y;
+            }
+            rb.velocity = vel;
+        }
     }
 
     [Command]
@@ -218,16 +221,3 @@ int CombineLayers(params string[] layers)
 }
 */
 
-        if (IsGrounded())
-        {
-            Vector3 vel = (transform.forward * Input.GetAxisRaw("Vertical") + transform.right * Input.GetAxisRaw("Horizontal")).normalized * speed;
-            if (Input.GetKey(KeyCode.Space))
-            {
-                vel.y = 9.81f * 0.5f * JUMP_DURATION;
-            }
-            else
-            {
-                vel.y = rb.velocity.y;
-            }
-            rb.velocity = vel;
-        }
