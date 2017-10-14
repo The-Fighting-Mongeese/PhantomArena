@@ -13,7 +13,7 @@ public class Stamina : MonoBehaviour {
     {
         time_last_stamina_use = Time.fixedTime;
         current_stamina = MAX_STAMINA;
-        _staminaBar = GameObject.Find("StaminaBar").GetComponent<UIBar>();
+        _staminaBar = GameObject.Find("CanvasUI").FindObject("StaminaBar").GetComponent<UIBar>();
         _staminaBar.Init(MAX_STAMINA);
     }
 
