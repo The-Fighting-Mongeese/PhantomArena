@@ -33,6 +33,7 @@ public class PlayerController : NetworkBehaviour {
     private Rigidbody rb;
     private Health health;
     private AnimateController ac;
+    private PhasedMaterial[] phasedMaterials;
 
     [SerializeField]
     private Skill basicAttack;
@@ -52,6 +53,7 @@ public class PlayerController : NetworkBehaviour {
         rb = GetComponent<Rigidbody>();
         health = GetComponent<Health>();
         ac = GetComponent<AnimateController>();
+        phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
     }
@@ -131,16 +133,16 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     public void RpcChangePhase(int layer)
     {
-        if (layer == physicalLayer)
+        // Basic error checking
+        if (layer != physicalLayer && layer != phantomLayer)
         {
-            transform.SetAllLayers(physicalLayer);  // Change layer 
-            mesh.material.color = physicalColor;    // Change appearance
+            Debug.LogError("ERROR | PlayerController: Attempting to phase change into a non-phase layer # " + layer);
+            return;
         }
-        else
-        {
-            transform.SetAllLayers(phantomLayer);
-            mesh.material.color = phantomColor;
-        }
+
+        transform.SetAllLayers(layer);              // Change layer
+        foreach (var pm in phasedMaterials)         // Change appearance
+            pm.ShowPhase(layer);
     }
 
     // Note: Called from animation clip
