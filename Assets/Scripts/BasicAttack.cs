@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class BasicAttack : Skill
 {
@@ -20,6 +21,12 @@ public class BasicAttack : Skill
         stamina = GetComponent<Stamina>();
     }
 
+    [Command]
+    private void CmdDamage(GameObject other)
+    {
+        other.GetComponent<Health>().RpcTakeTrueDamage(damage);
+    }
+
     #region Implements: Skill
 
     public override bool ConditionsMet()
@@ -34,7 +41,7 @@ public class BasicAttack : Skill
 
     public override void Activate(GameObject other)
     {
-        other.GetComponent<Health>().CmdTakeTrueDamage(damage);
+        CmdDamage(other);
     }
 
     #endregion

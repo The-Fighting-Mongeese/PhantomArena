@@ -83,6 +83,7 @@ public class PlayerController : NetworkBehaviour {
         {
             if (basicAttack.ConditionsMet())
             {
+                Debug.Log("Basic attacking");
                 ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
                 basicAttack.ConsumeResources();
                 currentSkill = basicAttack;
@@ -140,7 +141,9 @@ public class PlayerController : NetworkBehaviour {
             return;
         }
 
-        transform.SetAllLayers(layer);              // Change layer
+        // transform.SetAllLayers(layer);           // Change layer for entire object + children (BUG: for transform and direct children only)
+        gameObject.layer = layer;                   // Change main body layer
+        weapon.gameObject.layer = layer;            // Change weapon layer
         foreach (var pm in phasedMaterials)         // Change appearance
             pm.ShowPhase(layer);
     }
@@ -166,6 +169,7 @@ public class PlayerController : NetworkBehaviour {
 
     public void OnWeaponEnter(GameObject other)
     {
+        Debug.Log("OnWeaponEnter");
         if (!isLocalPlayer)
             return;
         // other.GetComponent<Health>().CmdTakeTrueDamage(20);
