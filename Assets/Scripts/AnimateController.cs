@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class AnimateController : NetworkBehaviour {
@@ -11,34 +12,62 @@ public class AnimateController : NetworkBehaviour {
     {
         anim = GetComponent<Animator>();
         networkAnimator = GetComponent<NetworkAnimator>();
-        networkAnimator.SetParameterAutoSend(0, true);
+        // networkAnimator.SetParameterAutoSend(0, true);
     }
 
-    void Update () {
-
+    void Update ()
+    {
         if (isLocalPlayer)
         {
-            float movement = Input.GetAxisRaw("Vertical") + Input.GetAxisRaw("Horizontal");
+            float hor = Input.GetAxisRaw("Horizontal");
+            float ver = Input.GetAxisRaw("Vertical");
 
-            if (movement != 0)
+            anim.SetFloat("Input X", hor);
+            anim.SetFloat("Input Z", ver);
+
+            if (hor != 0 || ver != 0)  //if there is some input
             {
-                //anim.Play ("Dude Walk", -1, 0.0f); from beginning
-                anim.SetFloat("speed", 1.0f);
+                //set that character is moving
+                anim.SetBool("Moving", true);
+                anim.SetBool("Running", true);
             }
             else
             {
-                anim.SetFloat("speed", 0.0f);
-                //anim.Play("Idle"); anim.SetFloat("speed", 1.0f);
+                //character is not moving
+                anim.SetBool("Moving", false);
+                anim.SetBool("Running", false);
             }
 
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                anim.SetBool("Dead", !anim.GetBool("Dead"));
+                CmdNetworkedTrigger("Die");
+            }
         }
-        else
-        {
-            networkedAnimationSpeed = float.Parse(networkAnimator.param0.Substring(18));
-            anim.SetFloat("speed", networkedAnimationSpeed);
-        }
+    }
 
+    [Command]
+    public void CmdNetworkedTrigger(string param)
+    {
+        RpcNetworkedTrigger(param);
+    }
 
+    [ClientRpc]
+    void RpcNetworkedTrigger(string param)
+    {
+        anim.SetTrigger(param);
 
     }
+
+    public IEnumerator COStunPause(float pauseTime)
+    {
+        yield return new WaitForSeconds(pauseTime);
+    }
+
+
 }
+
+
+// networkAnimator.SetTrigger("Attack1Trigger"); // WARNING: Sadly there's a bug where the trigger plays twice on the server player 
+// anim.SetTrigger("Attack1Trigger");
+// StartCoroutine(COStunPause(1.2f));   // ?
