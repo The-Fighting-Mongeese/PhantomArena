@@ -87,7 +87,8 @@ public class Health : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            transform.position = Vector3.zero;
+            Transform spawnLocation = GameObject.Find("NetworkSpawnLocation").transform;
+            transform.position = spawnLocation.position;
         }
     }
 
