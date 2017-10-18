@@ -1,0 +1,8 @@
+Removed anim even originally at frame 11 (0:11). This is when the "hit" is registered.
+Original Location: ThirdParty/RPG Char.../Animations/Unarmed/...
+
+NormalAttack
+Original Location: ThirdParty/Warrior Pack 2/Knight Warrior/Animations/Attack1
+
+StrongAttack
+Original Location: ThirdParty/Warrior Pack 2/2Handed Warrior/Animations/Attack1

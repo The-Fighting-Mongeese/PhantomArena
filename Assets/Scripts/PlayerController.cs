@@ -9,6 +9,8 @@ using UnityEngine.Networking;
 public class PlayerController : NetworkBehaviour {
     private float JUMP_DURATION = 1.0f;
 
+    public WeaponCollider weapon;
+
     [SerializeField]
     private float speed = 10.0f;
 
@@ -29,7 +31,20 @@ public class PlayerController : NetworkBehaviour {
     private Color phantomColor = new Color(37 / 255f, 162 / 255f, 195 / 255f);
 
     private Rigidbody rb;
-    private Health health; 
+    private Health health;
+    private AnimateController ac;
+    private PhasedMaterial[] phasedMaterials;
+
+    [SerializeField]
+    private Skill basicAttack;
+    [SerializeField]
+    private Skill firstSkill;
+    [SerializeField]
+    private Skill secondSkill;
+    [SerializeField]
+    private Skill thirdSkill;
+
+    private Skill currentSkill;
 
 
     void Start()
@@ -37,6 +52,8 @@ public class PlayerController : NetworkBehaviour {
         mesh = GetComponent<Renderer>();
         rb = GetComponent<Rigidbody>();
         health = GetComponent<Health>();
+        ac = GetComponent<AnimateController>();
+        phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
     }
@@ -59,6 +76,35 @@ public class PlayerController : NetworkBehaviour {
         if (Input.GetKeyDown(KeyCode.F))
         {
             AttemptPhaseChange();
+        }
+
+        // attack / skill detection
+        if (Input.GetButtonDown("Fire1"))
+        {
+            if (basicAttack.ConditionsMet())
+            {
+                Debug.Log("Basic attacking");
+                ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
+                basicAttack.ConsumeResources();
+                currentSkill = basicAttack;
+            }
+        }
+        else if (Input.GetButtonDown("Skill1"))
+        {
+            if (firstSkill.ConditionsMet())
+            {
+                ac.CmdNetworkedTrigger("SkillStrongAttackTrigger"); // TODO: Move to skill
+                firstSkill.ConsumeResources();
+                currentSkill = firstSkill;
+            }
+        }
+        else if (Input.GetButtonDown("Skill2"))
+        {
+            ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
+        }
+        else if (Input.GetButtonDown("Skill3"))
+        {
+            ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
         }
     }
 
@@ -88,16 +134,46 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     public void RpcChangePhase(int layer)
     {
-        if (layer == physicalLayer)
+        // Basic error checking
+        if (layer != physicalLayer && layer != phantomLayer)
         {
-            transform.SetAllLayers(physicalLayer);  // Change layer 
-            mesh.material.color = physicalColor;    // Change appearance
+            Debug.LogError("ERROR | PlayerController: Attempting to phase change into a non-phase layer # " + layer);
+            return;
         }
-        else
-        {
-            transform.SetAllLayers(phantomLayer);
-            mesh.material.color = phantomColor;
-        }
+
+        // transform.SetAllLayers(layer);           // Change layer for entire object + children (BUG: for transform and direct children only)
+        gameObject.layer = layer;                   // Change main body layer
+        weapon.gameObject.layer = layer;            // Change weapon layer
+        foreach (var pm in phasedMaterials)         // Change appearance
+            pm.ShowPhase(layer);
+    }
+
+    // Note: Called from animation clip
+    public void AnimEvent_ColliderActivate()
+    {
+        if (!isLocalPlayer)
+            return;
+        weapon.OnOpponentTrigger += OnWeaponEnter;
+        weapon.ActivateCollider();
+    }
+
+    // Note: Called from animation clip
+    public void AnimEvent_ColliderDeactivate()
+    {
+        if (!isLocalPlayer)
+            return;
+        weapon.OnOpponentTrigger -= OnWeaponEnter;
+        weapon.DeactivateCollider();
+        currentSkill = null;
+    }
+
+    public void OnWeaponEnter(GameObject other)
+    {
+        Debug.Log("OnWeaponEnter");
+        if (!isLocalPlayer)
+            return;
+        // other.GetComponent<Health>().CmdTakeTrueDamage(20);
+        currentSkill.Activate(other);
     }
 
     private bool AttemptPhaseChange()
@@ -150,3 +226,4 @@ int CombineLayers(params string[] layers)
     return finalLayerMask;
 }
 */
+
