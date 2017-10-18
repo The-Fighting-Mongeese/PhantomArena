@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class Stamina : MonoBehaviour {
+public class Stamina : NetworkBehaviour {
+
+    public float CurrentStamina { get { return current_stamina; } }
+
     const int MAX_STAMINA = 100;
     const float RECHARGE_DELAY = 1;
     const float RECHARGE_RATE = 4;
@@ -19,6 +23,8 @@ public class Stamina : MonoBehaviour {
 
     public void Update()
     {
+        if (!isLocalPlayer)
+            return;
         //regenerates stamina if greater than RECHARGE_DELAY seconds have passed
         //FIXME: current solution can skip up to Time.deltaTime of regeneration
         if (Time.fixedTime - time_last_stamina_use - RECHARGE_DELAY > 0)
