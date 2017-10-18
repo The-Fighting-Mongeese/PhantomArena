@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// A fast but weak attack. 
+/// </summary>
 public class BasicAttack : Skill
 {
     public int staminaRequired = 10;

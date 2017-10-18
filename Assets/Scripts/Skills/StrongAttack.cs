@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// A strong but slow attack that consumes a lot of stamina. 
+/// </summary>
 public class StrongAttack : Skill
 {
     public int staminaRequired = 50;

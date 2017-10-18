@@ -46,6 +46,10 @@ public class PlayerController : NetworkBehaviour {
 
     private Skill currentSkill;
 
+    public bool skillLocked = false;
+    public bool phaseLocked = false;
+    public bool moveLocked = false;
+
 
     void Start()
     {
@@ -100,7 +104,12 @@ public class PlayerController : NetworkBehaviour {
         }
         else if (Input.GetButtonDown("Skill2"))
         {
-            ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
+            if (secondSkill.ConditionsMet())
+            {
+                ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
+                secondSkill.ConsumeResources();
+                currentSkill = secondSkill;
+            }
         }
         else if (Input.GetButtonDown("Skill3"))
         {
