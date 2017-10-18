@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class Mana : MonoBehaviour {
+public class Mana : NetworkBehaviour {
 
     public float CurrentMana { get { return current_mana; } }
 
@@ -21,6 +22,8 @@ public class Mana : MonoBehaviour {
 
     public void Update()
     {
+        if (!isLocalPlayer)
+            return;
         //regenerates mana if greater than RECHARGE_DELAY seconds have passed
         //FIXME: current solution can skip up to Time.deltaTime of regeneration
         if (Time.fixedTime - time_last_mana_use - RECHARGE_DELAY > 0)
