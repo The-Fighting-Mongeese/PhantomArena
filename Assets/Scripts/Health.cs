@@ -7,12 +7,13 @@ public class Health : NetworkBehaviour
 
     public int maxHealth = 100;
     public Image fillImg; 
-    public Text hpText;
+    public Text hpText;             // health bar over all other players 
 
     [SyncVar(hook ="OnChangeHealth")]
     public int currentHealth;
 
-    private UIBar _healthBar;
+    private UIBar _healthBar;       // health bar HUD (for current player only)
+
 
     private void Awake()
     {
@@ -28,8 +29,9 @@ public class Health : NetworkBehaviour
         currentHealth = health;
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
-        _healthBar.UpdateUI(health);
-        //print("change hp: " + currentHealth + " / " + maxHealth + " divided=" +(float)currentHealth / maxHealth);
+
+        if (isLocalPlayer)
+            _healthBar.UpdateUI(health);
     }
 
 
