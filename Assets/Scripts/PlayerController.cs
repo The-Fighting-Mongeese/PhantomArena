@@ -106,9 +106,9 @@ public class PlayerController : NetworkBehaviour {
         {
             if (secondSkill.ConditionsMet())
             {
-                ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
+                ac.CmdNetworkedTrigger("SkillAntiPhaseAttackTrigger");
                 secondSkill.ConsumeResources();
-                currentSkill = secondSkill;
+                currentSkill = thirdSkill;
             }
         }
         else if (Input.GetButtonDown("Skill3"))
