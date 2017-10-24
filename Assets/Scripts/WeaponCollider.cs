@@ -24,7 +24,8 @@ public class WeaponCollider : MonoBehaviour
     {
         if (other.CompareTag("Player") && other.gameObject != host)
         {
-            OnOpponentTrigger(other.gameObject);
+            if (OnOpponentTrigger != null)
+                OnOpponentTrigger(other.gameObject);
         }
     }
 

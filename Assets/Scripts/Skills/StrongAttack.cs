@@ -12,23 +12,17 @@ public class StrongAttack : Skill
     public int damage = 50;
     public float cooldown = 5f;         // seconds 
 
-    private PlayerController player;
     private Health health;
     private Stamina stamina;
-    
 
-    private void Start()
+
+    protected override void Awake()
     {
-        player = GetComponent<PlayerController>();
+        base.Awake();
         health = GetComponent<Health>();
         stamina = GetComponent<Stamina>();
     }
 
-    [Command]
-    private void CmdDamage(GameObject other)
-    {
-        other.GetComponent<Health>().RpcTakeTrueDamage(damage);
-    }
 
     #region Implements: Skill
 
@@ -44,7 +38,21 @@ public class StrongAttack : Skill
 
     public override void Activate(GameObject other)
     {
-        CmdDamage(other);
+        if (!isLocalPlayer) return;
+        base.CmdDamage(other, damage);
+    }
+
+    protected override void SkillStart()
+    {
+        if (!isLocalPlayer) return;
+        player.weapon.OnOpponentTrigger += Activate;    // listen to weapon hits 
+    }
+
+    protected override void SkillEnd()
+    {
+        if (!isLocalPlayer) return;
+        player.weapon.OnOpponentTrigger -= Activate;    // stop listening to weapon hits 
+        player.weapon.DeactivateCollider();             // ensure weapon is deactivated
     }
 
     #endregion

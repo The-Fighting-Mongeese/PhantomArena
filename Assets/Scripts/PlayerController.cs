@@ -157,33 +157,6 @@ public class PlayerController : NetworkBehaviour {
             pm.ShowPhase(layer);
     }
 
-    // Note: Called from animation clip
-    public void AnimEvent_ColliderActivate()
-    {
-        if (!isLocalPlayer)
-            return;
-        weapon.OnOpponentTrigger += OnWeaponEnter;
-        weapon.ActivateCollider();
-    }
-
-    // Note: Called from animation clip
-    public void AnimEvent_ColliderDeactivate()
-    {
-        if (!isLocalPlayer)
-            return;
-        weapon.OnOpponentTrigger -= OnWeaponEnter;
-        weapon.DeactivateCollider();
-        currentSkill = null;
-    }
-
-    public void OnWeaponEnter(GameObject other)
-    {
-        Debug.Log("OnWeaponEnter");
-        if (!isLocalPlayer)
-            return;
-        // other.GetComponent<Health>().CmdTakeTrueDamage(20);
-        currentSkill.Activate(other);
-    }
 
     private bool AttemptPhaseChange()
     {
