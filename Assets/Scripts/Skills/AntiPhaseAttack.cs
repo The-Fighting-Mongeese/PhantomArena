@@ -100,6 +100,7 @@ public class AntiPhaseAttack : Skill
 
     public override void Activate(GameObject other)
     {
+        Debug.Log("Activate called");
         CmdDamage(other);
     }
 
