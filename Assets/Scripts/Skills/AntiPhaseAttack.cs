@@ -12,7 +12,6 @@ public class AntiPhaseAttack : Skill
     public int damage = 50;
     public float cooldown = 5f;         // seconds 
 
-    private Health health;
     private Mana mana;
     private int initialPhase;
 
@@ -20,7 +19,6 @@ public class AntiPhaseAttack : Skill
     protected override void Awake()
     {
         base.Awake();
-        health = GetComponent<Health>();
         mana = GetComponent<Mana>();
     }
 

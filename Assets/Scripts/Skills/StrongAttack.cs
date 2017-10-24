@@ -12,14 +12,12 @@ public class StrongAttack : Skill
     public int damage = 50;
     public float cooldown = 5f;         // seconds 
 
-    private Health health;
     private Stamina stamina;
 
 
     protected override void Awake()
     {
         base.Awake();
-        health = GetComponent<Health>();
         stamina = GetComponent<Stamina>();
     }
 

@@ -20,15 +20,8 @@ public class PlayerController : NetworkBehaviour {
     [SerializeField]
     float coreRadius = 0.3f;
 
-    //private Rigidbody rb;
-
-    private Renderer mesh;
-
     // TODO: Probably move this out or find a better way to cache.
     private int phantomLayer, physicalLayer;
-    // TODO: Probably move this to a static Constant class
-    private Color physicalColor = new Color(174 / 255f, 51 / 255f, 4 / 255f);
-    private Color phantomColor = new Color(37 / 255f, 162 / 255f, 195 / 255f);
 
     private Rigidbody rb;
     private Health health;
@@ -53,7 +46,6 @@ public class PlayerController : NetworkBehaviour {
 
     void Start()
     {
-        mesh = GetComponent<Renderer>();
         rb = GetComponent<Rigidbody>();
         health = GetComponent<Health>();
         ac = GetComponent<AnimateController>();

@@ -11,13 +11,11 @@ public class WeaponCollider : MonoBehaviour
     public GameObject host;
     
     private Collider col;
-    private Collider hostCol; 
 
 
     private void Awake()
     {
         col = GetComponent<Collider>();
-        hostCol = host.GetComponent<Collider>();
     }
 
     private void OnTriggerEnter(Collider other)
