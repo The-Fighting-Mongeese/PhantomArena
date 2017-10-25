@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 114390783488668994}
   - component: {fileID: 114928089859944694}
   - component: {fileID: 114321974989365938}
+  - component: {fileID: 114193863307685434}
   m_Layer: 8
   m_Name: PlayerKnight
   m_TagString: Player
@@ -3078,6 +3079,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42177d3e6a823da4facd2fe345c8c519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114193863307685434
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1006755277417678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 121758821a0c24e45a6166c85c403f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animStateId: 
+  manaRequired: 50
+  cooldown: 5
+  forceChangeProjectilePrefab: {fileID: 1017998237860330, guid: 7f27988e25afbe34da588acb1950f339,
+    type: 2}
+  projectileSpawnLoc: {fileID: 4679719191160410}
 --- !u!114 &114216346954865302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3165,7 +3183,7 @@ MonoBehaviour:
   basicAttack: {fileID: 114928089859944694}
   firstSkill: {fileID: 114390783488668994}
   secondSkill: {fileID: 114321974989365938}
-  thirdSkill: {fileID: 0}
+  thirdSkill: {fileID: 114193863307685434}
   skillLocked: 0
   phaseLocked: 0
   moveLocked: 0
