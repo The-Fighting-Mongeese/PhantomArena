@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7a81fe48cf6c247b5a5c1289850546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  originalShooter: 0
 --- !u!114 &114764418030051504
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -154,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
+  m_TransformSyncMode: 3
   m_SendInterval: 0
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
@@ -171,7 +172,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1017998237860330}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

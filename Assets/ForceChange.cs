@@ -11,6 +11,7 @@ public class ForceChange : Skill
     public Transform projectileSpawnLoc;
 
     private Mana mana;
+    // private int netId; 
 
 
     protected override void Awake()
@@ -22,16 +23,23 @@ public class ForceChange : Skill
     public void AnimEvent_FC_LaunchProjectile()
     {
         if (!isLocalPlayer) return;
+        CmdLaunchProjectile();
+    }
+
+    [Command]
+    public void CmdLaunchProjectile()
+    {
         Activate(null);
+
     }
 
     public override void Activate(GameObject other)
     {
-        if (!isLocalPlayer) return;
+        // Activate is only called on server. No local checking. 
 
         // TODO: rotation should be from camera rotation
         var projectile = Instantiate(forceChangeProjectilePrefab, projectileSpawnLoc.position, transform.rotation);
-        projectile.GetComponent<ForceChangeProjectile>().originalShooter = 100;
+        projectile.GetComponent<ForceChangeProjectile>().originalShooter = netId.Value;
         // TODO: Magic numbers 
         projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * 5f;
 

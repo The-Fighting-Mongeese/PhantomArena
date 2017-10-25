@@ -107,7 +107,7 @@ public class PlayerController : NetworkBehaviour {
         {
             if (thirdSkill.ConditionsMet())
             {
-                // ac.CmdNetworkedTrigger("");
+                ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
                 thirdSkill.ConsumeResources();
                 currentSkill = thirdSkill;
             }
