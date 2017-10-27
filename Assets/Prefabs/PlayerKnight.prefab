@@ -3062,7 +3062,7 @@ MonoBehaviour:
   animStateId: ForceChange
   manaRequired: 50
   cooldown: 5
-  forceChangeProjectilePrefab: {fileID: 1017998237860330, guid: 7f27988e25afbe34da588acb1950f339,
+  forceChangeProjectilePrefab: {fileID: 114426240350976534, guid: 7f27988e25afbe34da588acb1950f339,
     type: 2}
   projectileSpawnLoc: {fileID: 4833255379232754}
 --- !u!114 &114104700226836900
