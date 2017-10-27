@@ -105,7 +105,12 @@ public class PlayerController : NetworkBehaviour {
         }
         else if (Input.GetButtonDown("Skill3"))
         {
-            ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
+            if (thirdSkill.ConditionsMet())
+            {
+                ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
+                thirdSkill.ConsumeResources();
+                currentSkill = thirdSkill;
+            }
         }
     }
 
