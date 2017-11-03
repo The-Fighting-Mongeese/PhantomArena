@@ -17,7 +17,7 @@ public class Health : NetworkBehaviour
 
     private void Awake()
     {
-        _healthBar = GameObject.Find("HealthBar").GetComponent<UIBar>();
+        _healthBar = GameObject.Find("CanvasUI").FindObject("HealthBar").GetComponent<UIBar>();
         _healthBar.Init(maxHealth);
         currentHealth = maxHealth;
         hpText.text = currentHealth + "/" + maxHealth;
@@ -87,7 +87,8 @@ public class Health : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            transform.position = Vector3.zero;
+            Transform spawnLocation = GameObject.Find("NetworkSpawnLocation").transform;
+            transform.position = spawnLocation.position;
         }
     }
 
