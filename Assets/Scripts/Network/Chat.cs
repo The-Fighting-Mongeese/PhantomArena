@@ -47,7 +47,8 @@ public class Chat : NetworkBehaviour {
         currentProfile.Id = id;
         currentProfile.Name = name;
         currentProfile.Level = level;
-       // this.pName = currentProfile.Name;
+        // this.pName = currentProfile.Name;
+        gameObject.name = currentProfile.Name;
         playerNameText.text = currentProfile.Name;
         print("this name: " + pName);
     }
