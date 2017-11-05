@@ -1105,6 +1105,7 @@ GameObject:
   - component: {fileID: 114195949151028196}
   - component: {fileID: 114337072558324822}
   - component: {fileID: 114087667508331904}
+  - component: {fileID: 114103785630324526}
   m_Layer: 8
   m_Name: PlayerKnightBow
   m_TagString: Player
@@ -2925,7 +2926,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 10000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -3295,6 +3296,20 @@ MonoBehaviour:
   cameraPosition: {fileID: 4278021368725300}
   projectileSpawnPosition: {fileID: 4355842191573062}
   arrowSpeed: 35
+--- !u!114 &114103785630324526
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693161654377380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f7a102415c4e7449a7c3b26029a066, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightningStrikePrefab: {fileID: 1381260812198820, guid: 1d6081679c03b434b8de4b794a90e5fb,
+    type: 2}
+  lightningAliveTime: 25
 --- !u!114 &114112477737580762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3446,7 +3461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33aa58200c76ab146a1bfa226a5f5a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateRate: 0.2
+  updateRate: 0.1
 --- !u!114 &114404327199140544
 MonoBehaviour:
   m_ObjectHideFlags: 1

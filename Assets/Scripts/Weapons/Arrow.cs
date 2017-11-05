@@ -13,6 +13,7 @@ public class Arrow : NetworkBehaviour {
         GetComponent<Rigidbody>().detectCollisions = false;
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
 
+
         Health target = collision.transform.GetComponent<Health>();
 
         if (target != null)
@@ -20,5 +21,7 @@ public class Arrow : NetworkBehaviour {
             if(isServer)
             target.CmdTakeTrueDamage(arrowDamage);
         }
+
+        Destroy(gameObject, 2f);
     }
 }

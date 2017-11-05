@@ -47,6 +47,9 @@ public class PlayerController : NetworkBehaviour {
     private Skill currentSkill;
 
 
+
+    bool mouseVisible = true;
+
     void Start()
     {
         mesh = GetComponent<Renderer>();
@@ -56,10 +59,30 @@ public class PlayerController : NetworkBehaviour {
         phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update ()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            //Cursor.visible = mouseVisible;
+            if (mouseVisible)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            mouseVisible = !mouseVisible;
+        }
+
+
         if (Input.GetKeyDown(KeyCode.P))
         {
             Health s = GetComponent<Health>();
