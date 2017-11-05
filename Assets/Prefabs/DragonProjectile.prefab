@@ -209,7 +209,7 @@ MonoBehaviour:
   explosionEffectPrefab: {fileID: 1686667006583956, guid: a6865a1594240214dbc3f26a27144252,
     type: 2}
   explosionRadius: 15
-  damage: 25
+  damage: 50
 --- !u!135 &135930280395524064
 SphereCollider:
   m_ObjectHideFlags: 1
