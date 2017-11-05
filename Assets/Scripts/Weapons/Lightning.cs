@@ -7,9 +7,10 @@ public class Lightning : NetworkBehaviour {
 
     public GameObject lightningStrikePrefab;
     public float lightningAliveTime = 10.0f;
+    public int manaCost = 20;
 	
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.F1))   CmdLightningBolt();
+        if (Input.GetKeyDown(KeyCode.F1) && GetComponent<Mana>().TryUseMana(manaCost))   CmdLightningBolt();
 	}
 
 
