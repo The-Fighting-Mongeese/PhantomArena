@@ -151,7 +151,11 @@ public class Dragon : NetworkBehaviour {
 
         distance = Vector3.Distance(transform.position, playerTransform.position);
 
-        if (distance > 8.0f)
+        var vectorToTarget = playerTransform.position - transform.position;
+        vectorToTarget.y = 0;
+        var distanceToTarget = vectorToTarget.magnitude;
+
+        if (distanceToTarget > 12.0f)
         {
             transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
             transform.position = Vector3.MoveTowards(transform.position, playerTransform.position + targetOffset, step);

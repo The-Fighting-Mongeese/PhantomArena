@@ -6,15 +6,6 @@ public class DragonProjectile : NetworkBehaviour {
     public GameObject explosionEffectPrefab; //assign via inspector
     public float explosionRadius = 15.0f;
     public int damage = 20;
-    public float speed = 15.0f;
-    public Transform target;
-
-    private Vector3 startPos;
-
-    private void Start()
-    {
-        startPos = transform.position;
-    }
 
     
 
@@ -33,7 +24,7 @@ public class DragonProjectile : NetworkBehaviour {
         {
 
             Health target = col.transform.GetComponent<Health>();
-            if (target != null)
+            if (target != null && target.tag != "Dragon")
                 if (isServer)
                     target.CmdTakeTrueDamage(damage);           
         }

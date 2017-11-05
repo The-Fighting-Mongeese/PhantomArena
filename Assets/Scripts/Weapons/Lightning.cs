@@ -9,10 +9,7 @@ public class Lightning : NetworkBehaviour {
     public float lightningAliveTime = 10.0f;
 	
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            CmdLightningBolt();
-        }
+        if (Input.GetKeyDown(KeyCode.F1))   CmdLightningBolt();
 	}
 
 

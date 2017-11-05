@@ -3309,7 +3309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lightningStrikePrefab: {fileID: 1381260812198820, guid: 1d6081679c03b434b8de4b794a90e5fb,
     type: 2}
-  lightningAliveTime: 25
+  lightningAliveTime: 15
 --- !u!114 &114112477737580762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3398,6 +3398,7 @@ MonoBehaviour:
   - {fileID: 124552329501332820}
   - {fileID: 20055574863332564}
   - {fileID: 114087667508331904}
+  - {fileID: 114103785630324526}
 --- !u!114 &114260637209356562
 MonoBehaviour:
   m_ObjectHideFlags: 1
