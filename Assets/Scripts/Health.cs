@@ -90,11 +90,6 @@ public class Health : NetworkBehaviour
             Transform spawnLocation = GameObject.Find("NetworkSpawnLocation").transform;
             transform.position = spawnLocation.position;
         }
-
-        if(GetComponent<Dragon>() != null)
-        {
-            Destroy(gameObject);
-        }
     }
 
 

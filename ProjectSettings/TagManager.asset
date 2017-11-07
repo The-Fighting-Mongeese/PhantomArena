@@ -6,8 +6,6 @@ TagManager:
   tags:
   - HealthPack
   - HealthPackSpawn
-  - Water
-  - Dragon
   layers:
   - Default
   - TransparentFX

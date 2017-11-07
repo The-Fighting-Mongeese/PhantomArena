@@ -8,7 +8,7 @@ public class PlayerLerp : NetworkBehaviour {
     Vector3 playerNext; //next position of the most recent update from server
     Vector3 playerPrevious; //previous position before updates from server
     Quaternion playerRotation;
-    public float updateRate = 0.1f; //how long we want to wait between position updates
+    public float updateRate = 0.2f; //how long we want to wait between position updates
     float progress, startTime;
 
     private void OnEnable()

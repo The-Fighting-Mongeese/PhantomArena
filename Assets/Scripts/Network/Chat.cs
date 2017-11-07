@@ -15,26 +15,20 @@ public class Chat : NetworkBehaviour {
 
     public PlayerProfile currentProfile;
     PlayerProfileController playerProfileController;
-    [SyncVar]
     public string pName = "";
 
     private void Start()
     {
-        chatText = GameObject.Find("chatText").GetComponent<Text>();
-        inputField = GameObject.Find("InputField").GetComponent<InputField>();
-        nameInput = GameObject.Find("nameInputField").GetComponent<InputField>();
         if (!isLocalPlayer)
         {
             enabled = false;
-            this.gameObject.name = pName + this.GetComponent<NetworkIdentity>().netId;
-            playerNameText.text = pName;
         }
-        if (isLocalPlayer)
-        {
-            CmdGetPlayerProfile(nameInput.text);
-            UserInterfaceController.TransitionToGameUI();
-        }
-
+        //print(connectionToClient.connectionId + " client run");
+        chatText = GameObject.Find("chatText").GetComponent<Text>();
+        inputField = GameObject.Find("InputField").GetComponent<InputField>();
+        nameInput = GameObject.Find("nameInputField").GetComponent<InputField>();
+        CmdGetPlayerProfile(nameInput.text);
+        UserInterfaceController.TransitionToGameUI();
     }
 
     [Command]
@@ -42,8 +36,8 @@ public class Chat : NetworkBehaviour {
     {
         playerProfileController = new PlayerProfileController();
         PlayerProfile _profile = playerProfileController.GetPlayerProfile(name);
+        print(_profile.ToString());
         RpcSetPlayerProfile(_profile.Id, _profile.Name, _profile.Level);
-        //print(_profile.ToString());//print("total connections: " + NetworkServer.connections.Count);
     }
 
     [ClientRpc]
@@ -53,9 +47,9 @@ public class Chat : NetworkBehaviour {
         currentProfile.Id = id;
         currentProfile.Name = name;
         currentProfile.Level = level;
-        this.pName = name;
-        playerNameText.text = pName;
-        gameObject.name = pName + GetComponent<NetworkIdentity>().netId;
+       // this.pName = currentProfile.Name;
+        playerNameText.text = currentProfile.Name;
+        print("this name: " + pName);
     }
 
     [Command]
@@ -80,12 +74,11 @@ public class Chat : NetworkBehaviour {
 
         }
 
-        /*
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             inputField.text = "";
             CmdListPlayers();
-        } */
+        }
 
     }
 
