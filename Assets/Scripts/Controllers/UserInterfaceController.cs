@@ -15,6 +15,7 @@ public class UserInterfaceController : MonoBehaviour {
     void Start () {
         chatPanel = GameObject.Find("ChatPanel");
         nameInput = GameObject.Find("nameInputField").GetComponent<InputField>();
+        nameInput.text = "HelloWorld";
         canvasGroup = nameInput.GetComponent<CanvasGroup>();
         UIBars = GameObject.Find("CanvasUI").FindObject("UIBars");
     }
