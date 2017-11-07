@@ -20,15 +20,8 @@ public class PlayerController : NetworkBehaviour {
     [SerializeField]
     float coreRadius = 0.3f;
 
-    //private Rigidbody rb;
-
-    private Renderer mesh;
-
     // TODO: Probably move this out or find a better way to cache.
     private int phantomLayer, physicalLayer;
-    // TODO: Probably move this to a static Constant class
-    private Color physicalColor = new Color(174 / 255f, 51 / 255f, 4 / 255f);
-    private Color phantomColor = new Color(37 / 255f, 162 / 255f, 195 / 255f);
 
     private Rigidbody rb;
     private Health health;
@@ -46,10 +39,13 @@ public class PlayerController : NetworkBehaviour {
 
     private Skill currentSkill;
 
+    public bool skillLocked = false;
+    public bool phaseLocked = false;
+    public bool moveLocked = false;
+
 
     void Start()
     {
-        mesh = GetComponent<Renderer>();
         rb = GetComponent<Rigidbody>();
         health = GetComponent<Health>();
         ac = GetComponent<AnimateController>();
@@ -100,11 +96,21 @@ public class PlayerController : NetworkBehaviour {
         }
         else if (Input.GetButtonDown("Skill2"))
         {
-            ac.CmdNetworkedTrigger("SkillStrongAttackTrigger");
+            if (secondSkill.ConditionsMet())
+            {
+                ac.CmdNetworkedTrigger("SkillAntiPhaseAttackTrigger");
+                secondSkill.ConsumeResources();
+                currentSkill = secondSkill;
+            }
         }
         else if (Input.GetButtonDown("Skill3"))
         {
-            ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
+            if (thirdSkill.ConditionsMet())
+            {
+                ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
+                thirdSkill.ConsumeResources();
+                currentSkill = thirdSkill;
+            }
         }
     }
 
@@ -148,33 +154,6 @@ public class PlayerController : NetworkBehaviour {
             pm.ShowPhase(layer);
     }
 
-    // Note: Called from animation clip
-    public void AnimEvent_ColliderActivate()
-    {
-        if (!isLocalPlayer)
-            return;
-        weapon.OnOpponentTrigger += OnWeaponEnter;
-        weapon.ActivateCollider();
-    }
-
-    // Note: Called from animation clip
-    public void AnimEvent_ColliderDeactivate()
-    {
-        if (!isLocalPlayer)
-            return;
-        weapon.OnOpponentTrigger -= OnWeaponEnter;
-        weapon.DeactivateCollider();
-        currentSkill = null;
-    }
-
-    public void OnWeaponEnter(GameObject other)
-    {
-        Debug.Log("OnWeaponEnter");
-        if (!isLocalPlayer)
-            return;
-        // other.GetComponent<Health>().CmdTakeTrueDamage(20);
-        currentSkill.Activate(other);
-    }
 
     private bool AttemptPhaseChange()
     {
