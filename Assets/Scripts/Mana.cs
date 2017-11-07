@@ -16,7 +16,7 @@ public class Mana : NetworkBehaviour {
     {
         time_last_mana_use = Time.fixedTime;
         current_mana = MAX_MANA;
-        _manaBar = GameObject.Find("ManaBar").GetComponent<UIBar>();
+        _manaBar = GameObject.Find("CanvasUI").FindObject("ManaBar").GetComponent<UIBar>();
         _manaBar.Init(MAX_MANA);
     }
 
