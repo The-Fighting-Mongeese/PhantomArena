@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 114928089859944694}
   - component: {fileID: 114321974989365938}
   - component: {fileID: 114013752531894518}
+  - component: {fileID: 114712929900147468}
   m_Layer: 8
   m_Name: PlayerKnight
   m_TagString: Player
@@ -3378,7 +3379,7 @@ MonoBehaviour:
   m_FillOrigin: 0
 --- !u!114 &114712929900147468
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1006755277417678}
