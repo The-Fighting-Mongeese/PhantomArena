@@ -44,6 +44,7 @@ public class StrongAttack : Skill
     {
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger += Activate;    // listen to weapon hits 
+        player.skillLocked = true;
     }
 
     protected override void SkillEnd()
@@ -51,6 +52,7 @@ public class StrongAttack : Skill
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger -= Activate;    // stop listening to weapon hits 
         player.weapon.DeactivateCollider();             // ensure weapon is deactivated
+        player.skillLocked = false;
     }
 
     #endregion

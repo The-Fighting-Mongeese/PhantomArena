@@ -54,6 +54,8 @@ public class AntiPhaseAttack : Skill
         
         // listen to weapon triggers
         player.weapon.OnOpponentTrigger += Activate;
+
+        player.skillLocked = true;
     }
 
     protected override void SkillEnd()
@@ -69,6 +71,8 @@ public class AntiPhaseAttack : Skill
 
         // ensure collider is deactivated 
         player.weapon.DeactivateCollider();
+
+        player.skillLocked = false;
     }
 
     #endregion

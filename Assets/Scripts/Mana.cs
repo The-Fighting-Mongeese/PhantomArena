@@ -7,7 +7,7 @@ public class Mana : NetworkBehaviour {
 
     const int MAX_MANA = 100;
     const float RECHARGE_DELAY = 1;
-    const float RECHARGE_RATE = 4;
+    public float RECHARGE_RATE = 4;
     private float current_mana;
     private float time_last_mana_use;
     private UIBar _manaBar;

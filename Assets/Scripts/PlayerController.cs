@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Stamina))]
 [RequireComponent(typeof(Mana))]
-public class PlayerController : NetworkBehaviour {
+public class PlayerController : NetworkBehaviour
+{
     private float JUMP_DURATION = 1.0f;
 
     public WeaponCollider weapon;
@@ -27,6 +28,8 @@ public class PlayerController : NetworkBehaviour {
     private Health health;
     private AnimateController ac;
     private PhasedMaterial[] phasedMaterials;
+    [SerializeField]
+    private ThirdPersonCameraRig rig;
 
     [SerializeField]
     private Skill basicAttack;
@@ -39,6 +42,7 @@ public class PlayerController : NetworkBehaviour {
 
     private Skill currentSkill;
 
+    // Note: a more comprehensive setup would be to use a counter here (if multiple effects locked you) 
     public bool skillLocked = false;
     public bool phaseLocked = false;
     public bool moveLocked = false;
@@ -54,7 +58,7 @@ public class PlayerController : NetworkBehaviour {
         physicalLayer = LayerMask.NameToLayer("Physical");
     }
 
-    void Update ()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -69,47 +73,53 @@ public class PlayerController : NetworkBehaviour {
         }
 
         // Handle phase change 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (!phaseLocked)
         {
-            AttemptPhaseChange();
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                AttemptPhaseChange();
+            }
         }
 
         // attack / skill detection
-        if (Input.GetButtonDown("Fire1"))
+        if (!skillLocked)
         {
-            if (basicAttack.ConditionsMet())
+            if (Input.GetButtonDown("Fire1"))
             {
-                Debug.Log("Basic attacking");
-                ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
-                basicAttack.ConsumeResources();
-                currentSkill = basicAttack;
+                if (basicAttack.ConditionsMet())
+                {
+                    Debug.Log("Basic attacking");
+                    ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
+                    basicAttack.ConsumeResources();
+                    currentSkill = basicAttack;
+                }
             }
-        }
-        else if (Input.GetButtonDown("Skill1"))
-        {
-            if (firstSkill.ConditionsMet())
+            else if (Input.GetButtonDown("Skill1"))
             {
-                ac.CmdNetworkedTrigger("SkillStrongAttackTrigger"); // TODO: Move to skill
-                firstSkill.ConsumeResources();
-                currentSkill = firstSkill;
+                if (firstSkill.ConditionsMet())
+                {
+                    ac.CmdNetworkedTrigger("SkillStrongAttackTrigger"); // TODO: Move to skill
+                    firstSkill.ConsumeResources();
+                    currentSkill = firstSkill;
+                }
             }
-        }
-        else if (Input.GetButtonDown("Skill2"))
-        {
-            if (secondSkill.ConditionsMet())
+            else if (Input.GetButtonDown("Skill2"))
             {
-                ac.CmdNetworkedTrigger("SkillAntiPhaseAttackTrigger");
-                secondSkill.ConsumeResources();
-                currentSkill = secondSkill;
+                if (secondSkill.ConditionsMet())
+                {
+                    ac.CmdNetworkedTrigger("SkillAntiPhaseAttackTrigger");
+                    secondSkill.ConsumeResources();
+                    currentSkill = secondSkill;
+                }
             }
-        }
-        else if (Input.GetButtonDown("Skill3"))
-        {
-            if (thirdSkill.ConditionsMet())
+            else if (Input.GetButtonDown("Skill3"))
             {
-                ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
-                thirdSkill.ConsumeResources();
-                currentSkill = thirdSkill;
+                if (thirdSkill.ConditionsMet())
+                {
+                    ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
+                    thirdSkill.ConsumeResources();
+                    currentSkill = thirdSkill;
+                }
             }
         }
     }
@@ -118,16 +128,68 @@ public class PlayerController : NetworkBehaviour {
     {
         if (IsGrounded())
         {
-            Vector3 vel = (transform.forward * Input.GetAxisRaw("Vertical") + transform.right * Input.GetAxisRaw("Horizontal")).normalized * speed;
-            if (Input.GetKey(KeyCode.Space))
+            // using MouseLook
+            if (rig == null)
             {
-                vel.y = 9.81f * 0.5f * JUMP_DURATION;
+                // accepting user input 
+                if (!moveLocked)
+                {
+                    Vector3 vel = (transform.forward * Input.GetAxisRaw("Vertical") + transform.right * Input.GetAxisRaw("Horizontal")).normalized * speed;
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        vel.y = 9.81f * 0.5f * JUMP_DURATION;
+                    }
+                    else
+                    {
+                        vel.y = rb.velocity.y;
+                    }
+                    rb.velocity = vel;
+                }
+                else // user cannot move character
+                {
+                    Vector3 vel = rb.velocity;
+                    vel.x = 0;
+                    vel.z = 0;
+                    rb.velocity = vel;
+                }
             }
-            else
+            else // using ThirdPersonCameraRig
             {
-                vel.y = rb.velocity.y;
+                // accepting user input 
+                if (!moveLocked)
+                {
+                    float forwardInput = Input.GetAxisRaw("Vertical");
+                    float sideInput = Input.GetAxisRaw("Horizontal");
+
+                    if (forwardInput != 0 || sideInput != 0)
+                    {
+                        transform.rotation = Quaternion.LookRotation(rig.FlatForward());
+                    }
+
+                    Debug.DrawLine(transform.position, transform.position + rig.FlatForward(), Color.blue);
+                    Debug.DrawLine(transform.position, transform.position + rig.FlatRight(), Color.red);
+
+
+                    Vector3 vel = (rig.FlatForward() * Input.GetAxisRaw("Vertical") + rig.FlatRight() * Input.GetAxisRaw("Horizontal")).normalized * speed;
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        vel.y = 9.81f * 0.5f * JUMP_DURATION;
+                    }
+                    else
+                    {
+                        vel.y = rb.velocity.y;
+                    }
+                    rb.velocity = vel;
+                }
+                else // user cannot move character
+                {
+                    Vector3 vel = rb.velocity;
+                    vel.x = 0;
+                    vel.z = 0;
+                    rb.velocity = vel;
+                }
             }
-            rb.velocity = vel;
+
         }
     }
 
@@ -152,6 +214,12 @@ public class PlayerController : NetworkBehaviour {
         weapon.gameObject.layer = layer;            // Change weapon layer
         foreach (var pm in phasedMaterials)         // Change appearance
             pm.ShowPhase(layer);
+    }
+
+    [ClientRpc]
+    public void RpcSetPhaseLock(bool locked)
+    {
+        phaseLocked = locked;
     }
 
 
