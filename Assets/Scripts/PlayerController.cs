@@ -14,6 +14,8 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField]
     private float speed = 10.0f;
+    [SerializeField]
+    private float strafeMultiplier = 0.5f;
 
     [SerializeField]
     float coreHeight = 0.5f;    // from center to top / bottom (actually half height than) 
@@ -128,7 +130,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (IsGrounded())
         {
-            // using MouseLook
+            // using MouseLook (doesn't handle strafing)
             if (rig == null)
             {
                 // accepting user input 
@@ -155,22 +157,31 @@ public class PlayerController : NetworkBehaviour
             }
             else // using ThirdPersonCameraRig
             {
+                // spaghetti 
+
                 // accepting user input 
                 if (!moveLocked)
                 {
                     float forwardInput = Input.GetAxisRaw("Vertical");
                     float sideInput = Input.GetAxisRaw("Horizontal");
+                    Vector3 vel = new Vector3();
 
                     if (forwardInput != 0 || sideInput != 0)
                     {
+                        // realign player with camera if player is moving
                         transform.rotation = Quaternion.LookRotation(rig.FlatForward());
+
+                        // strafing 
+                        if (forwardInput <= 0)
+                        {
+                            vel = (rig.FlatForward() * forwardInput + rig.FlatRight() * sideInput).normalized * speed * strafeMultiplier;
+                        }
+                        else // forward movement
+                        {
+                            vel = (rig.FlatForward() * forwardInput + rig.FlatRight() * sideInput).normalized * speed;
+                        }
                     }
 
-                    Debug.DrawLine(transform.position, transform.position + rig.FlatForward(), Color.blue);
-                    Debug.DrawLine(transform.position, transform.position + rig.FlatRight(), Color.red);
-
-
-                    Vector3 vel = (rig.FlatForward() * Input.GetAxisRaw("Vertical") + rig.FlatRight() * Input.GetAxisRaw("Horizontal")).normalized * speed;
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         vel.y = 9.81f * 0.5f * JUMP_DURATION;
@@ -179,6 +190,7 @@ public class PlayerController : NetworkBehaviour
                     {
                         vel.y = rb.velocity.y;
                     }
+
                     rb.velocity = vel;
                 }
                 else // user cannot move character

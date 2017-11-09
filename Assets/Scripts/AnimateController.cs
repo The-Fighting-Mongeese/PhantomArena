@@ -27,14 +27,25 @@ public class AnimateController : NetworkBehaviour {
 
             if (hor != 0 || ver != 0)  //if there is some input
             {
-                //set that character is moving
-                anim.SetBool("Moving", true);
-                anim.SetBool("Running", true);
+                // user moving horizontally / backwards
+                if (ver <= 0)
+                {
+                    anim.SetBool("Moving", true);
+                    anim.SetBool("Strafing", true);
+                    anim.SetBool("Running", false);
+                }
+                else // moving foward
+                {
+                    anim.SetBool("Moving", true);
+                    anim.SetBool("Strafing", false);
+                    anim.SetBool("Running", true);
+                }
             }
             else
             {
                 //character is not moving
                 anim.SetBool("Moving", false);
+                anim.SetBool("Strafing", false);
                 anim.SetBool("Running", false);
             }
 
@@ -64,6 +75,15 @@ public class AnimateController : NetworkBehaviour {
         yield return new WaitForSeconds(pauseTime);
     }
 
+    public void FootL()
+    {
+        // called when left foot hits the floor 
+    }
+
+    public void FootR()
+    {
+        // called when right foots hits the floor 
+    }
 
 }
 
