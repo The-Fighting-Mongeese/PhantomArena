@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Health : NetworkBehaviour
 {
+    public GameObject model;
+    public GameObject ragdoll;
 
     public int maxHealth = 100;
     public Image fillImg; 
@@ -71,7 +73,12 @@ public class Health : NetworkBehaviour
         {
             //die
             currentHealth = maxHealth; //heal
-            CmdRespawn();
+
+            // GetComponent<Collider>().enabled = false;
+            // GetComponent<RagdollHelper>().SetRagdollEnabled(true);
+            // Instantiate(ragdoll);
+
+            // CmdRespawn();
         }
         
     }
