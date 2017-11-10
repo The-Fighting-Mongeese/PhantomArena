@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 public class AnimateController : NetworkBehaviour {
 
     public Animator anim;
-    NetworkAnimator networkAnimator;
+    public NetworkAnimator networkAnimator;
     private float networkedAnimationSpeed = 0;
 
     private void Start()
@@ -64,7 +64,7 @@ public class AnimateController : NetworkBehaviour {
     }
 
     [ClientRpc]
-    void RpcNetworkedTrigger(string param)
+    public void RpcNetworkedTrigger(string param)
     {
         anim.SetTrigger(param);
 

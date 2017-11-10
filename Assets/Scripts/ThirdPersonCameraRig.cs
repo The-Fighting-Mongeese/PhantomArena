@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class ThirdPersonCameraRig : NetworkBehaviour
+public class ThirdPersonCameraRig : MonoBehaviour
 {
     public float maximumVerticalAngle = 45.0f;  // the maximum and minimum angles that the player can look vertically
     public float minimumVerticalAngle = -45.0f;
@@ -17,8 +17,6 @@ public class ThirdPersonCameraRig : NetworkBehaviour
 
     private void Awake()
     {
-        distanceToPlayer = Camera.main.transform.localPosition;
-
         // store current distance to player
         player = transform.parent;
         transform.parent = null; // unparent so this rig doesn't inherit rotation
