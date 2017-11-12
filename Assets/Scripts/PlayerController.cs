@@ -246,7 +246,7 @@ public class PlayerController : NetworkBehaviour
         {
             return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f, ~(1 << phantomLayer));
         }
-        if (gameObject.layer == physicalLayer)
+        if (gameObject.layer == phantomLayer)
         {
             return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f, ~(1 << physicalLayer));
         }
