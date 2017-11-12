@@ -27,6 +27,7 @@ public class PlayerController : NetworkBehaviour
     private int phantomLayer, physicalLayer;
 
     private Rigidbody rb;
+    private Collider col;
     private Health health;
     private AnimateController ac;
     private PhasedMaterial[] phasedMaterials;
@@ -54,6 +55,7 @@ public class PlayerController : NetworkBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
         health = GetComponent<Health>();
         ac = GetComponent<AnimateController>();
         phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
@@ -138,79 +140,50 @@ public class PlayerController : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        // if movelocked zero horizontal velocity and return
+        if (moveLocked)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            return;
+        }
+
+        float forwardInput = Input.GetAxisRaw("Vertical");
+        float sideInput = Input.GetAxisRaw("Horizontal");
+        // get input vector
+        Vector3 vel = (rig.FlatForward() * forwardInput) + (rig.FlatRight() * sideInput);
+        // only normalize input vector if magnitude greater than 1 as to allow analog input
+        if (vel.magnitude > 1) 
+        {
+            vel.Normalize();
+        }
+        // realign player with camera if player is moving
+        if ((forwardInput != 0) || (sideInput != 0)) 
+        {
+            transform.rotation = Quaternion.LookRotation(rig.FlatForward());
+        }
+
         if (IsGrounded())
         {
-            // using MouseLook (doesn't handle strafing)
-            if (rig == null)
+            vel *= speed;
+            // strafing 
+            if (forwardInput <= 0) 
             {
-                // accepting user input 
-                if (!moveLocked)
-                {
-                    Vector3 vel = (transform.forward * Input.GetAxisRaw("Vertical") + transform.right * Input.GetAxisRaw("Horizontal")).normalized * speed;
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        vel.y = 9.81f * 0.5f * JUMP_DURATION;
-                    }
-                    else
-                    {
-                        vel.y = rb.velocity.y;
-                    }
-                    rb.velocity = vel;
-                }
-                else // user cannot move character
-                {
-                    Vector3 vel = rb.velocity;
-                    vel.x = 0;
-                    vel.z = 0;
-                    rb.velocity = vel;
-                }
+                vel *= strafeMultiplier;
             }
-            else // using ThirdPersonCameraRig
+
+            // jumping
+            if (Input.GetKey(KeyCode.Space))    // use GetKey(not down) here to keep applying the jump vel until IsGrounded is false
             {
-                // spaghetti 
-
-                // accepting user input 
-                if (!moveLocked)
-                {
-                    float forwardInput = Input.GetAxisRaw("Vertical");
-                    float sideInput = Input.GetAxisRaw("Horizontal");
-                    Vector3 vel = new Vector3();
-
-                    if (forwardInput != 0 || sideInput != 0)
-                    {
-                        // realign player with camera if player is moving
-                        transform.rotation = Quaternion.LookRotation(rig.FlatForward());
-
-                        // strafing 
-                        if (forwardInput <= 0)
-                        {
-                            vel = (rig.FlatForward() * forwardInput + rig.FlatRight() * sideInput).normalized * speed * strafeMultiplier;
-                        }
-                        else // forward movement
-                        {
-                            vel = (rig.FlatForward() * forwardInput + rig.FlatRight() * sideInput).normalized * speed;
-                        }
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        vel.y = 9.81f * 0.5f * JUMP_DURATION;
-                    }
-                    else
-                    {
-                        vel.y = rb.velocity.y;
-                    }
-
-                    rb.velocity = vel;
-                }
-                else // user cannot move character
-                {
-                    Vector3 vel = rb.velocity;
-                    vel.x = 0;
-                    vel.z = 0;
-                    rb.velocity = vel;
-                }
+                vel.y = 9.81f * 0.5f * JUMP_DURATION;
             }
+            else
+            {
+                vel.y = 0;  // keep the player sticking to the ground.
+            }
+            rb.velocity = vel;
+        }
+        else // is not grounded
+        {
 
         }
     }
@@ -288,6 +261,14 @@ public class PlayerController : NetworkBehaviour
 
     bool IsGrounded()
     {
+        if (gameObject.layer == physicalLayer) 
+        {
+            return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f, ~(1 << phantomLayer));
+        }
+        if (gameObject.layer == phantomLayer)
+        {
+            return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f, ~(1 << physicalLayer));
+        }
         return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f);
     }
 
