@@ -17,6 +17,8 @@ public class Health : NetworkBehaviour
 
     public float respawnDelay = 5f;
 
+    public bool alive = true;
+
     private UIBar _healthBar;       // health bar HUD (for current player only)
 
 
@@ -31,6 +33,7 @@ public class Health : NetworkBehaviour
     
     void OnChangeHealth(int health)
     {
+        Debug.Log("OnChangeHealth()");
         currentHealth = health;
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
@@ -51,6 +54,7 @@ public class Health : NetworkBehaviour
     public void CmdHeal(int amountHealed)
     {
         print( GetComponent<Chat>().pName + " cmd heal called");
+        if (!alive) return;
         RpcHeal(amountHealed);
     }
 
@@ -65,25 +69,22 @@ public class Health : NetworkBehaviour
     [Command]
     public void CmdTakeTrueDamage(int amount)
     {
-        if (!isServer)
-        {
-            Debug.LogError("Command not ran on server " + this);
-        }
-
         Debug.Log("Current life " + currentHealth + " amount " + amount);
+        if (!alive) return;
 
         currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)
         {
             Debug.Log("Dieing");
+            alive = false;
             currentHealth = 0;
 
             // play death animation if it has one 
             var animc = GetComponent<AnimateController>();
             if (animc != null)
             {
-                animc.networkAnimator.SetTrigger("Die");
-                animc.anim.SetBool("Dead", true);
+                animc.RpcNetworkedTrigger("Die");   // don't use SetTrigger here or the anim will run twice for local player
+                RpcSetBool("Dead", true);
             }
 
             // respawn after delay
@@ -108,24 +109,14 @@ public class Health : NetworkBehaviour
     [Command]
     void CmdRespawn()
     {
+        currentHealth = maxHealth;
+        alive = true;
         RpcRespawn();
     }
 
     [ClientRpc]
     void RpcRespawn()
     {
-        if (isLocalPlayer)
-        {
-            Transform spawnLocation = GameObject.Find("NetworkSpawnLocation").transform;
-            transform.position = spawnLocation.position;
-        }
-    }
-
-    // This should be ran on the server only
-    private IEnumerator RespawnAfterDelay(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-
         // disable ragdoll if it has one
         var ragdollhelper = GetComponent<RagdollHelper>();
         if (ragdollhelper != null)
@@ -136,15 +127,29 @@ public class Health : NetworkBehaviour
         if (animc != null)
             animc.anim.SetBool("Dead", false);
 
-        // reset to full HP
-        currentHealth = maxHealth;
-
         // reset to spawn position
         Transform spawnLocation = GameObject.Find("NetworkSpawnLocation").transform;
         transform.position = spawnLocation.position;
 
         // reset 
         gameObject.SetActive(true);
+    }
+
+    // This should be ran on the server only
+    private IEnumerator RespawnAfterDelay(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        CmdRespawn();
+    }
+
+    [ClientRpc]
+    private void RpcSetBool(string name, bool torf)
+    {
+        var animc = GetComponent<AnimateController>();
+        if (animc != null)
+        {
+            animc.anim.SetBool(name, torf); // this will be ran twice, but with the same value there will be no problem
+        }
     }
 
 }

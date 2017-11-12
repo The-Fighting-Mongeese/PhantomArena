@@ -32,6 +32,7 @@ public class PlayerController : NetworkBehaviour
     private PhasedMaterial[] phasedMaterials;
     [SerializeField]
     private ThirdPersonCameraRig rig;
+    private SkillStateMachine deathBehaviour;
 
     [SerializeField]
     private Skill basicAttack;
@@ -58,6 +59,15 @@ public class PlayerController : NetworkBehaviour
         phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
+
+        // customize death
+        deathBehaviour = ac.anim.GetBehaviour<SkillStateMachine>("Death");
+        if (deathBehaviour != null)
+        {
+            Debug.Log("Found death behaviour");
+            deathBehaviour.OnStateEntered += OnDeath;
+            deathBehaviour.OnStateExited += OnRespawn;
+        }
     }
 
     void Update()
@@ -205,6 +215,15 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    public void OnDestroy()
+    {
+        if (deathBehaviour != null)
+        {
+            deathBehaviour.OnStateEntered -= OnDeath;
+            deathBehaviour.OnStateExited -= OnRespawn;
+        }
+    }
+
     [Command]
     public void CmdChangePhase(int layer)
     {
@@ -270,6 +289,27 @@ public class PlayerController : NetworkBehaviour
     bool IsGrounded()
     {
         return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f);
+    }
+
+    private void OnDeath()
+    {
+        if (isLocalPlayer)
+        {
+            moveLocked = true;
+            skillLocked = true;
+            phaseLocked = true;
+        }
+    }
+
+    private void OnRespawn()
+    {
+        if (isLocalPlayer)
+        {
+            moveLocked = false;
+            skillLocked = false;
+            phaseLocked = false;
+            CmdChangePhase(LayerHelper.PhysicalLayer);
+        }
     }
 }
 
