@@ -27,6 +27,7 @@ public class PlayerController : NetworkBehaviour
     private int phantomLayer, physicalLayer;
 
     private Rigidbody rb;
+    private Collider col;
     private Health health;
     private AnimateController ac;
     private PhasedMaterial[] phasedMaterials;
@@ -53,6 +54,7 @@ public class PlayerController : NetworkBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
         health = GetComponent<Health>();
         ac = GetComponent<AnimateController>();
         phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
@@ -158,8 +160,16 @@ public class PlayerController : NetworkBehaviour
             {
                 vel *= strafeMultiplier;
             }
+
             // jumping
-            vel.y = (Input.GetKeyDown(KeyCode.Space)) ? 9.81f * 0.5f * JUMP_DURATION : rb.velocity.y;
+            if (Input.GetKey(KeyCode.Space))    // use GetKey(not down) here to keep applying the jump vel until IsGrounded is false
+            {
+                vel.y = 9.81f * 0.5f * JUMP_DURATION;
+            }
+            else
+            {
+                vel.y = 0;  // keep the player sticking to the ground.
+            }
             rb.velocity = vel;
         }
         else // is not grounded
