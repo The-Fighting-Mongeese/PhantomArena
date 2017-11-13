@@ -38,7 +38,14 @@ public class ThirdPersonCameraRig : MonoBehaviour
         verticalControl.localEulerAngles = new Vector3(verticalRotation, 0, 0);
 
         // make sure rig is on player
-        transform.position = player.position + distanceToPlayer;
+        if (player != null)
+        {
+            transform.position = player.position + distanceToPlayer;
+        }
+        else // if player is gone self destruct
+        {
+            Destroy(gameObject);
+        }
     }
 
     public Vector3 FlatForward()
