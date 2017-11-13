@@ -273,13 +273,13 @@ public class PlayerController : NetworkBehaviour
     {
         if (gameObject.layer == physicalLayer) 
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f, ~(1 << phantomLayer));
+            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << phantomLayer));
         }
         if (gameObject.layer == phantomLayer)
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f, ~(1 << physicalLayer));
+            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << physicalLayer));
         }
-        return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f);
+        return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f);
     }
 
     private void OnDeath()
