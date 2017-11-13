@@ -160,21 +160,31 @@ public class PlayerController : NetworkBehaviour
             {
                 vel *= strafeMultiplier;
             }
-
             // jumping
-            if (Input.GetKey(KeyCode.Space))    // use GetKey(not down) here to keep applying the jump vel until IsGrounded is false
+            // GetKey(not down) here to keep applying the jump vel until IsGrounded is false
+            if (Input.GetKey(KeyCode.Space))    
             {
                 vel.y = 9.81f * 0.5f * JUMP_DURATION;
             }
             else
             {
-                vel.y = 0;  // keep the player sticking to the ground.
+                // keep the player sticking to the ground
+                vel.y = Mathf.Min(-0.1f, rb.velocity.y);  
             }
             rb.velocity = vel;
         }
         else // is not grounded
         {
-
+            // air control
+            vel.x += rb.velocity.x;
+            vel.z += rb.velocity.z;
+            if (vel.magnitude > speed)
+            {
+                vel = vel.normalized * speed;
+            }
+            // strafing 
+            vel.y += rb.velocity.y;
+            rb.velocity = vel;
         }
     }
 
