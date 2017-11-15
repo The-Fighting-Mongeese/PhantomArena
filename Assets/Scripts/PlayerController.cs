@@ -170,21 +170,31 @@ public class PlayerController : NetworkBehaviour
             {
                 vel *= strafeMultiplier;
             }
-
             // jumping
-            if (Input.GetKey(KeyCode.Space))    // use GetKey(not down) here to keep applying the jump vel until IsGrounded is false
+            // GetKey(not down) here to keep applying the jump vel until IsGrounded is false
+            if (Input.GetKey(KeyCode.Space))    
             {
                 vel.y = 9.81f * 0.5f * JUMP_DURATION;
             }
             else
             {
-                vel.y = 0;  // keep the player sticking to the ground.
+                // keep the player sticking to the ground
+                vel.y = Mathf.Min(-0.1f, rb.velocity.y);  
             }
             rb.velocity = vel;
         }
         else // is not grounded
         {
-
+            // air control
+            vel.x += rb.velocity.x;
+            vel.z += rb.velocity.z;
+            if (vel.magnitude > speed)
+            {
+                vel = vel.normalized * speed;
+            }
+            // strafing 
+            vel.y += rb.velocity.y;
+            rb.velocity = vel;
         }
     }
 
@@ -263,13 +273,13 @@ public class PlayerController : NetworkBehaviour
     {
         if (gameObject.layer == physicalLayer) 
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f, ~(1 << phantomLayer));
+            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << phantomLayer));
         }
         if (gameObject.layer == phantomLayer)
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f, ~(1 << physicalLayer));
+            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << physicalLayer));
         }
-        return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f);
+        return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f);
     }
 
     private void OnDeath()
