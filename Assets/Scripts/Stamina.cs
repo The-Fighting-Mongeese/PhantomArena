@@ -7,7 +7,7 @@ public class Stamina : NetworkBehaviour {
 
     const int MAX_STAMINA = 100;
     const float RECHARGE_DELAY = 1;
-    const float RECHARGE_RATE = 4;
+    public float RECHARGE_RATE = 4;
     private float current_stamina;
     private float time_last_stamina_use;
 

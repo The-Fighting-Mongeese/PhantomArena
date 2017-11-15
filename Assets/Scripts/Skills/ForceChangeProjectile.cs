@@ -5,11 +5,16 @@ using UnityEngine.Networking;
 
 public class ForceChangeProjectile : NetworkBehaviour {
 
-    public uint originalShooter; // does not sync on clients, but doesn't need to
-    public float speed = 5f; 
+    public uint originalShooter; // does not sync on clients, but doesn't need to ... this might not work?
+    public float speed = 5f;
+    public float projectileLifetime = 2f;
+    public float phaseLockDuration = 4f;
 
-    private Rigidbody rb; 
-
+    [SerializeField]
+    private GameObject explosionParticles;
+    private Rigidbody rb;
+    private float counter = 0;
+    
 
     public void Launch()
     {
@@ -19,6 +24,13 @@ public class ForceChangeProjectile : NetworkBehaviour {
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        counter += Time.deltaTime;
+        if (counter > projectileLifetime)
+            gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,10 +48,29 @@ public class ForceChangeProjectile : NetworkBehaviour {
             if (originalShooter == identity.netId.Value)
                 return;
 
-            identity.RpcChangePhase(LayerHelper.Opposite(identity.gameObject.layer));
+            // play effects
+            RpcBlast();
 
+            // game logic
+            identity.RpcChangePhase(LayerHelper.Opposite(identity.gameObject.layer));
+            identity.RpcSetPhaseLock(true);
+            CoroutineManager.Instance.StartCoroutine(UnlockPhase(identity, phaseLockDuration)); // Note: If hit by multiple blast then only first duration is respected
             gameObject.SetActive(false);    // todo: play effect when collision
         }
+    }
+
+    [ClientRpc]
+    private void RpcBlast()
+    {
+        var currentPos = transform.position;
+        explosionParticles.transform.parent = null;
+        explosionParticles.SetActive(true);
+    }
+
+    private IEnumerator UnlockPhase(PlayerController other, float time)
+    {
+        yield return new WaitForSeconds(time);
+        other.RpcSetPhaseLock(false);
     }
 
 }

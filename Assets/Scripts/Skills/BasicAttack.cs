@@ -36,7 +36,6 @@ public class BasicAttack : Skill
 
     public override void Activate(GameObject other)
     {
-        Debug.Log("Basic attack activate");
         if (!isLocalPlayer) return;
         base.CmdDamage(other, damage);
     }
@@ -45,6 +44,9 @@ public class BasicAttack : Skill
     {
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger += Activate;    // listen to weapon hits 
+
+        player.skillLocked = true;
+        player.moveLocked = true;
     }
 
     protected override void SkillEnd()
@@ -52,6 +54,9 @@ public class BasicAttack : Skill
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger -= Activate;    // stop listening to weapon hits 
         player.weapon.DeactivateCollider();             // ensure weapon is deactivated
+
+        player.skillLocked = false;
+        player.moveLocked = false;
     }
 
     #endregion

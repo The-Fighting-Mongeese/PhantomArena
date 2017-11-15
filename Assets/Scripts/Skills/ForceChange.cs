@@ -35,7 +35,7 @@ public class ForceChange : Skill
 
         NetworkServer.Spawn(projectile.gameObject);
 
-        Destroy(projectile.gameObject, 2f); // TODO: all particles are abruptly turned off.
+        Destroy(projectile.gameObject, projectile.projectileLifetime + 5f); // Ensure this well off in the future, after the projectile has fully disabled itself
     }
 
     public override void Activate(GameObject other)
@@ -51,6 +51,20 @@ public class ForceChange : Skill
     public override void ConsumeResources()
     {
         mana.TryUseMana(manaRequired);
+    }
+
+    protected override void SkillStart()
+    {
+        if (!isLocalPlayer) return;
+        player.skillLocked = true;
+        player.moveLocked = true;
+    }
+
+    protected override void SkillEnd()
+    {
+        if (!isLocalPlayer) return;
+        player.skillLocked = false;
+        player.moveLocked = false;
     }
 
 }

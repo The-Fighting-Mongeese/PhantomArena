@@ -42,7 +42,7 @@ public abstract class Skill : NetworkBehaviour
     [Command]
     protected void CmdDamage(GameObject other, int damage)
     {
-        other.GetComponent<Health>().RpcTakeTrueDamage(damage);
+        other.GetComponent<Health>().CmdTakeTrueDamage(damage);
     }
 
     // Simple function animation clips can use to activate/deactivate weapon hit detection

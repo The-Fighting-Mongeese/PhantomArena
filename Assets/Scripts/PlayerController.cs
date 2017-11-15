@@ -6,13 +6,16 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Stamina))]
 [RequireComponent(typeof(Mana))]
-public class PlayerController : NetworkBehaviour {
+public class PlayerController : NetworkBehaviour
+{
     private float JUMP_DURATION = 1.0f;
 
     public WeaponCollider weapon;
 
     [SerializeField]
     private float speed = 10.0f;
+    [SerializeField]
+    private float strafeMultiplier = 0.5f;
 
     [SerializeField]
     float coreHeight = 0.5f;    // from center to top / bottom (actually half height than) 
@@ -24,9 +27,13 @@ public class PlayerController : NetworkBehaviour {
     private int phantomLayer, physicalLayer;
 
     private Rigidbody rb;
+    private Collider col;
     private Health health;
     private AnimateController ac;
     private PhasedMaterial[] phasedMaterials;
+    [SerializeField]
+    private ThirdPersonCameraRig rig;
+    private SkillStateMachine deathBehaviour;
 
     [SerializeField]
     private Skill basicAttack;
@@ -39,6 +46,7 @@ public class PlayerController : NetworkBehaviour {
 
     private Skill currentSkill;
 
+    // Note: a more comprehensive setup would be to use a counter here (if multiple effects locked you) 
     public bool skillLocked = false;
     public bool phaseLocked = false;
     public bool moveLocked = false;
@@ -47,14 +55,24 @@ public class PlayerController : NetworkBehaviour {
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
         health = GetComponent<Health>();
         ac = GetComponent<AnimateController>();
         phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
+
+        // customize death
+        deathBehaviour = ac.anim.GetBehaviour<SkillStateMachine>("Death");
+        if (deathBehaviour != null)
+        {
+            Debug.Log("Found death behaviour");
+            deathBehaviour.OnStateEntered += OnDeath;
+            deathBehaviour.OnStateExited += OnRespawn;
+        }
     }
 
-    void Update ()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -69,65 +87,123 @@ public class PlayerController : NetworkBehaviour {
         }
 
         // Handle phase change 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (!phaseLocked)
         {
-            AttemptPhaseChange();
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                AttemptPhaseChange();
+            }
         }
 
         // attack / skill detection
-        if (Input.GetButtonDown("Fire1"))
+        if (!skillLocked)
         {
-            if (basicAttack.ConditionsMet())
+            if (Input.GetButtonDown("Fire1"))
             {
-                Debug.Log("Basic attacking");
-                ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
-                basicAttack.ConsumeResources();
-                currentSkill = basicAttack;
+                if (basicAttack.ConditionsMet())
+                {
+                    Debug.Log("Basic attacking");
+                    ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
+                    basicAttack.ConsumeResources();
+                    currentSkill = basicAttack;
+                }
             }
-        }
-        else if (Input.GetButtonDown("Skill1"))
-        {
-            if (firstSkill.ConditionsMet())
+            else if (Input.GetButtonDown("Skill1"))
             {
-                ac.CmdNetworkedTrigger("SkillStrongAttackTrigger"); // TODO: Move to skill
-                firstSkill.ConsumeResources();
-                currentSkill = firstSkill;
+                if (firstSkill.ConditionsMet())
+                {
+                    ac.CmdNetworkedTrigger("SkillStrongAttackTrigger"); // TODO: Move to skill
+                    firstSkill.ConsumeResources();
+                    currentSkill = firstSkill;
+                }
             }
-        }
-        else if (Input.GetButtonDown("Skill2"))
-        {
-            if (secondSkill.ConditionsMet())
+            else if (Input.GetButtonDown("Skill2"))
             {
-                ac.CmdNetworkedTrigger("SkillAntiPhaseAttackTrigger");
-                secondSkill.ConsumeResources();
-                currentSkill = secondSkill;
+                if (secondSkill.ConditionsMet())
+                {
+                    ac.CmdNetworkedTrigger("SkillAntiPhaseAttackTrigger");
+                    secondSkill.ConsumeResources();
+                    currentSkill = secondSkill;
+                }
             }
-        }
-        else if (Input.GetButtonDown("Skill3"))
-        {
-            if (thirdSkill.ConditionsMet())
+            else if (Input.GetButtonDown("Skill3"))
             {
-                ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
-                thirdSkill.ConsumeResources();
-                currentSkill = thirdSkill;
+                if (thirdSkill.ConditionsMet())
+                {
+                    ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
+                    thirdSkill.ConsumeResources();
+                    currentSkill = thirdSkill;
+                }
             }
         }
     }
 
     private void FixedUpdate()
     {
+        // if movelocked zero horizontal velocity and return
+        if (moveLocked)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            return;
+        }
+
+        float forwardInput = Input.GetAxisRaw("Vertical");
+        float sideInput = Input.GetAxisRaw("Horizontal");
+        // get input vector
+        Vector3 vel = (rig.FlatForward() * forwardInput) + (rig.FlatRight() * sideInput);
+        // only normalize input vector if magnitude greater than 1 as to allow analog input
+        if (vel.magnitude > 1) 
+        {
+            vel.Normalize();
+        }
+        // realign player with camera if player is moving
+        if ((forwardInput != 0) || (sideInput != 0)) 
+        {
+            transform.rotation = Quaternion.LookRotation(rig.FlatForward());
+        }
+
         if (IsGrounded())
         {
-            Vector3 vel = (transform.forward * Input.GetAxisRaw("Vertical") + transform.right * Input.GetAxisRaw("Horizontal")).normalized * speed;
-            if (Input.GetKey(KeyCode.Space))
+            vel *= speed;
+            // strafing 
+            if (forwardInput <= 0) 
+            {
+                vel *= strafeMultiplier;
+            }
+            // jumping
+            // GetKey(not down) here to keep applying the jump vel until IsGrounded is false
+            if (Input.GetKey(KeyCode.Space))    
             {
                 vel.y = 9.81f * 0.5f * JUMP_DURATION;
             }
             else
             {
-                vel.y = rb.velocity.y;
+                // keep the player sticking to the ground
+                vel.y = Mathf.Min(-0.1f, rb.velocity.y);  
             }
             rb.velocity = vel;
+        }
+        else // is not grounded
+        {
+            // air control
+            vel.x += rb.velocity.x;
+            vel.z += rb.velocity.z;
+            if (vel.magnitude > speed)
+            {
+                vel = vel.normalized * speed;
+            }
+            // strafing 
+            vel.y += rb.velocity.y;
+            rb.velocity = vel;
+        }
+    }
+
+    public void OnDestroy()
+    {
+        if (deathBehaviour != null)
+        {
+            deathBehaviour.OnStateEntered -= OnDeath;
+            deathBehaviour.OnStateExited -= OnRespawn;
         }
     }
 
@@ -152,6 +228,12 @@ public class PlayerController : NetworkBehaviour {
         weapon.gameObject.layer = layer;            // Change weapon layer
         foreach (var pm in phasedMaterials)         // Change appearance
             pm.ShowPhase(layer);
+    }
+
+    [ClientRpc]
+    public void RpcSetPhaseLock(bool locked)
+    {
+        phaseLocked = locked;
     }
 
 
@@ -189,7 +271,36 @@ public class PlayerController : NetworkBehaviour {
 
     bool IsGrounded()
     {
-        return Physics.Raycast(transform.position, -Vector3.up, 2 * coreHeight + 0.01f);
+        if (gameObject.layer == physicalLayer) 
+        {
+            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << phantomLayer));
+        }
+        if (gameObject.layer == phantomLayer)
+        {
+            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << physicalLayer));
+        }
+        return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f);
+    }
+
+    private void OnDeath()
+    {
+        if (isLocalPlayer)
+        {
+            moveLocked = true;
+            skillLocked = true;
+            phaseLocked = true;
+        }
+    }
+
+    private void OnRespawn()
+    {
+        if (isLocalPlayer)
+        {
+            moveLocked = false;
+            skillLocked = false;
+            phaseLocked = false;
+            CmdChangePhase(LayerHelper.PhysicalLayer);
+        }
     }
 }
 
