@@ -92,19 +92,6 @@ public class Health : NetworkBehaviour
         }
     }
 
-    // DEPRECATED
-    [ClientRpc]
-    public void RpcTakeTrueDamage(int amount)
-    {
-        currentHealth -= amount;
-        if (currentHealth <= 0)
-        {
-            //die
-            currentHealth = maxHealth; //heal
-            CmdRespawn();
-        }
-        
-    }
 
     [Command]
     void CmdRespawn()
