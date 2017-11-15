@@ -6,7 +6,6 @@ public class AnimateController : NetworkBehaviour {
 
     public Animator anim;
     public NetworkAnimator networkAnimator;
-    private float networkedAnimationSpeed = 0;
 
     private void Start()
     {
