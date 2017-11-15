@@ -33,7 +33,6 @@ public class Health : NetworkBehaviour
     
     void OnChangeHealth(int health)
     {
-        Debug.Log("OnChangeHealth()");
         currentHealth = health;
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
