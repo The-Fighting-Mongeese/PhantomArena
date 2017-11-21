@@ -9,7 +9,8 @@ public class FaceCamera : MonoBehaviour {
     {
         //FIXME appears to be broken
         //transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.back, Camera.main.transform.rotation * Vector3.down);
-        transform.LookAt(Camera.main.transform);
+        //transform.LookAt(Camera.main.transform);
+        transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
     }
 
 }
