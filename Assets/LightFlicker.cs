@@ -5,14 +5,12 @@ using UnityEngine;
 public class LightFlicker : MonoBehaviour {
     Light thisLight;
     float startingIntensity;
-    Random r;
 
 
     // Use this for initialization
     void Start () {
         thisLight = GetComponent<Light>();
         startingIntensity = thisLight.intensity;
-        r = new Random();
 	}
 
     // Update is called once per frame

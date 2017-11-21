@@ -33,7 +33,7 @@ public class ThirdPersonCameraRig : MonoBehaviour
         transform.Rotate(horizontalRotation);
 
         // turn camera vertically
-        verticalRotation -= Input.GetAxis("Mouse Y") * lookSensitivity;
+        verticalRotation -= y * lookSensitivity;
         verticalRotation = Mathf.Clamp(verticalRotation, minimumVerticalAngle, maximumVerticalAngle);
         verticalControl.localEulerAngles = new Vector3(verticalRotation, 0, 0);
 

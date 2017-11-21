@@ -33,7 +33,6 @@ public class Health : NetworkBehaviour
     
     void OnChangeHealth(int health)
     {
-        Debug.Log("OnChangeHealth()");
         currentHealth = health;
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
@@ -115,8 +114,8 @@ public class Health : NetworkBehaviour
             animc.anim.SetBool("Dead", false);
 
         // reset to spawn position
-        Transform spawnLocation = GameObject.Find("NetworkSpawnLocation").transform;
-        transform.position = spawnLocation.position;
+        GameObject[] spawnLocations = GameObject.FindGameObjectsWithTag("PlayerSpawn");
+        transform.position = spawnLocations[Random.Range(0, spawnLocations.Length)].transform.position;
 
         // reset 
         gameObject.SetActive(true);
