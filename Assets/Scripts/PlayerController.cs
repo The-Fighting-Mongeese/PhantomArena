@@ -51,6 +51,7 @@ public class PlayerController : NetworkBehaviour
     public bool phaseLocked = false;
     public bool moveLocked = false;
 
+    bool mouseVisible = true;
 
     void Start()
     {
@@ -62,6 +63,8 @@ public class PlayerController : NetworkBehaviour
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
 
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         // customize death
         deathBehaviour = ac.anim.GetBehaviour<SkillStateMachine>("Death");
         if (deathBehaviour != null)
@@ -74,6 +77,23 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            //Cursor.visible = mouseVisible;
+            if (mouseVisible)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            mouseVisible = !mouseVisible;
+        }
+
+
         if (Input.GetKeyDown(KeyCode.P))
         {
             Health s = GetComponent<Health>();
