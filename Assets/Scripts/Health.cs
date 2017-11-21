@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Health : NetworkBehaviour
 {
+    public GameObject model;
+    public GameObject ragdoll;
 
     public int maxHealth = 100;
     public Image fillImg; 
@@ -11,6 +14,10 @@ public class Health : NetworkBehaviour
 
     [SyncVar(hook ="OnChangeHealth")]
     public int currentHealth;
+
+    public float respawnDelay = 5f;
+
+    public bool alive = true;
 
     private UIBar _healthBar;       // health bar HUD (for current player only)
 
@@ -26,6 +33,7 @@ public class Health : NetworkBehaviour
     
     void OnChangeHealth(int health)
     {
+        Debug.Log("OnChangeHealth()");
         currentHealth = health;
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
@@ -46,6 +54,7 @@ public class Health : NetworkBehaviour
     public void CmdHeal(int amountHealed)
     {
         print( GetComponent<Chat>().pName + " cmd heal called");
+        if (!alive) return;
         RpcHeal(amountHealed);
     }
 
@@ -60,38 +69,75 @@ public class Health : NetworkBehaviour
     [Command]
     public void CmdTakeTrueDamage(int amount)
     {
-        RpcTakeTrueDamage(amount);
-    }
+        Debug.Log("Current life " + currentHealth + " amount " + amount);
+        if (!alive) return;
 
-    [ClientRpc]
-    public void RpcTakeTrueDamage(int amount)
-    {
-        currentHealth -= amount;
+        currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)
         {
-            //die
-            currentHealth = maxHealth; //heal
-            CmdRespawn();
+            Debug.Log("Dieing");
+            alive = false;
+            currentHealth = 0;
+
+            // play death animation if it has one 
+            var animc = GetComponent<AnimateController>();
+            if (animc != null)
+            {
+                animc.RpcNetworkedTrigger("Die");   // don't use SetTrigger here or the anim will run twice for local player
+                RpcSetBool("Dead", true);
+            }
+
+            // respawn after delay
+            CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
         }
-        
     }
+
 
     [Command]
     void CmdRespawn()
     {
+        currentHealth = maxHealth;
+        alive = true;
         RpcRespawn();
     }
 
     [ClientRpc]
     void RpcRespawn()
     {
-        if (isLocalPlayer)
-        {
-            Transform spawnLocation = GameObject.Find("NetworkSpawnLocation").transform;
-            transform.position = spawnLocation.position;
-        }
+        // disable ragdoll if it has one
+        var ragdollhelper = GetComponent<RagdollHelper>();
+        if (ragdollhelper != null)
+            ragdollhelper.SetRagdollEnabled(false);
+
+        // stop death animation if it has one 
+        var animc = GetComponent<AnimateController>();
+        if (animc != null)
+            animc.anim.SetBool("Dead", false);
+
+        // reset to spawn position
+        Transform spawnLocation = GameObject.Find("NetworkSpawnLocation").transform;
+        transform.position = spawnLocation.position;
+
+        // reset 
+        gameObject.SetActive(true);
     }
 
+    // This should be ran on the server only
+    private IEnumerator RespawnAfterDelay(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        CmdRespawn();
+    }
+
+    [ClientRpc]
+    private void RpcSetBool(string name, bool torf)
+    {
+        var animc = GetComponent<AnimateController>();
+        if (animc != null)
+        {
+            animc.anim.SetBool(name, torf); // this will be ran twice, but with the same value there will be no problem
+        }
+    }
 
 }
 
