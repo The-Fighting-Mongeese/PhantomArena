@@ -86,6 +86,51 @@ public class Health : NetworkBehaviour
                 RpcSetBool("Dead", true);
             }
 
+            // Update death score
+            if (gameObject.tag == "Player")
+                GetComponent<PlayerMetrics>().deaths++;
+
+            // respawn after delay
+            CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+        }
+    }
+
+    //temp to be fixed, for receiving damage and adding score
+    [Command]
+    public void CmdTakeTrueDamage2(uint attackerNetId, int amount)
+    {
+        if (!alive) return;
+
+        currentHealth -= amount;    // syncvar - does not require Rpc call
+        if (currentHealth <= 0)
+        {
+            Debug.Log("Dieing");
+            alive = false;
+            currentHealth = 0;
+
+            // play death animation if it has one 
+            var animc = GetComponent<AnimateController>();
+            if (animc != null)
+            {
+                animc.RpcNetworkedTrigger("Die");   // don't use SetTrigger here or the anim will run twice for local player
+                RpcSetBool("Dead", true);
+            }
+
+            // Update death score
+            if (gameObject.tag == "Player")
+            {
+                var players = GameObject.FindGameObjectsWithTag("Player");
+                foreach(var p in players)
+                {
+                    if(p.GetComponent<NetworkIdentity>().netId.Value == attackerNetId)
+                    {
+                        p.GetComponent<PlayerMetrics>().kills++;
+                    }
+                }
+
+                GetComponent<PlayerMetrics>().deaths++;
+            }
+
             // respawn after delay
             CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
         }

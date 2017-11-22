@@ -36,11 +36,28 @@ public class Dragon : NetworkBehaviour {
     const float dragonWalk = 0.5f; 
     const float dragonIdle = 0.0f;
 
+
+
+
+    public override void OnStartServer()
+    {
+        dragonAnimator = GetComponent<Animator>();
+        dragonAnimator.SetBool("isFlying", true);
+        if (isServer)
+            StartCoroutine(ScanSurroundings(aggroRadius, timeBetweenScans));
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
+    /*
     void Start () {
         dragonAnimator = GetComponent<Animator>();
         if(isServer)
             StartCoroutine(ScanSurroundings(aggroRadius, timeBetweenScans));
-    }
+    }*/
 
     void Update () {
         if (!isServer) return;

@@ -17,8 +17,8 @@ public class Lightning : NetworkBehaviour {
     [Command]
     void CmdLightningBolt()
     {
-        Vector3 lightningInitialPosition = new Vector3(transform.position.x, lightningStrikePrefab.transform.position.y, transform.position.z);
-        GameObject lightningStrike = Instantiate(lightningStrikePrefab, lightningInitialPosition + transform.forward * 4, lightningStrikePrefab.transform.rotation);
+        Vector3 lightningInitialPosition = new Vector3(transform.position.x, transform.position.y + 12.5f, transform.position.z);
+        GameObject lightningStrike = Instantiate(lightningStrikePrefab, lightningInitialPosition + transform.forward * 5, lightningStrikePrefab.transform.rotation);
         NetworkServer.Spawn(lightningStrike);
         Destroy(lightningStrike, lightningAliveTime);
     }

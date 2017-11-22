@@ -23,6 +23,7 @@ public class Chat : NetworkBehaviour {
         chatText = GameObject.Find("chatText").GetComponent<Text>();
         inputField = GameObject.Find("InputField").GetComponent<InputField>();
         nameInput = GameObject.Find("nameInputField").GetComponent<InputField>();
+
         if (!isLocalPlayer)
         {
             enabled = false;
@@ -42,6 +43,7 @@ public class Chat : NetworkBehaviour {
         playerProfileController = new PlayerProfileController();
         PlayerProfile _profile = playerProfileController.GetPlayerProfile(name);
         RpcSetPlayerProfile(_profile.Id, _profile.Name, _profile.Level);
+        GetComponent<PlayerMetrics>().netID = connectionToClient.connectionId;
     }
 
     [ClientRpc]
@@ -54,6 +56,7 @@ public class Chat : NetworkBehaviour {
         this.pName = name;
         playerNameText.text = pName;
         this.gameObject.name = pName + this.GetComponent<NetworkIdentity>().netId;
+        GetComponent<PlayerMetrics>().playername = pName;
     }
 
     [Command]
@@ -78,11 +81,10 @@ public class Chat : NetworkBehaviour {
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            inputField.text = "";
-            CmdListPlayers();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //inputField.text = "";
+        //CmdListPlayers();
+        
 
     }
 
