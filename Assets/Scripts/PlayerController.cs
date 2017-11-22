@@ -11,6 +11,7 @@ public class PlayerController : NetworkBehaviour
     private float JUMP_DURATION = 1.0f;
 
     public WeaponCollider weapon;
+    public ThirdPersonCameraRig rig;
 
     [SerializeField]
     private float speed = 10.0f;
@@ -31,8 +32,6 @@ public class PlayerController : NetworkBehaviour
     private Health health;
     private AnimateController ac;
     private PhasedMaterial[] phasedMaterials;
-    [SerializeField]
-    private ThirdPersonCameraRig rig;
     private SkillStateMachine deathBehaviour;
 
     [SerializeField]

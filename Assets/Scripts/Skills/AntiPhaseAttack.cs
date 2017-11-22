@@ -56,6 +56,8 @@ public class AntiPhaseAttack : Skill
         player.weapon.OnOpponentTrigger += Activate;
 
         player.skillLocked = true;
+
+        transform.rotation = Quaternion.LookRotation(player.rig.FlatForward());    // face camera 
     }
 
     protected override void SkillEnd()

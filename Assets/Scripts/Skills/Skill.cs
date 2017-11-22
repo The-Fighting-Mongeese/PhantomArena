@@ -50,7 +50,8 @@ public abstract class Skill : NetworkBehaviour
     // Warning: This function is called multiple times (once for each Skill script), not recomended on release version.
     public void AnimEvent_ActivateWeaponCollider() { if (isLocalPlayer) player.weapon.ActivateCollider(); }
     public void AnimEvent_DeactivateWeaponCollider() { if (isLocalPlayer) player.weapon.DeactivateCollider(); }
-
+    public void AnimEvent_SetSkillLocked(int locked) { if (isLocalPlayer) player.skillLocked = locked > 0 ? true : false; }
+    public void AnimEvent_SetMoveLocked(int locked) { if (isLocalPlayer) player.moveLocked = locked > 0 ? true : false; }
 
     // Interface functions inheriting scripts need to implement. 
     public abstract bool ConditionsMet();               // to check whether or not this skill can be casted

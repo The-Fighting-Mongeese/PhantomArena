@@ -47,6 +47,8 @@ public class BasicAttack : Skill
 
         player.skillLocked = true;
         player.moveLocked = true;
+
+        transform.rotation = Quaternion.LookRotation(player.rig.FlatForward());    // face camera 
     }
 
     protected override void SkillEnd()
