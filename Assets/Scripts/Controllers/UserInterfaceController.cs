@@ -5,6 +5,8 @@ public class UserInterfaceController : MonoBehaviour {
 
     public GameObject chatPanel;
     public static GameObject UIBars;
+    public static GameObject TimeDisplay;
+
     #region Lobby Interface Elements
 
     public static CanvasGroup canvasGroup;
@@ -18,6 +20,7 @@ public class UserInterfaceController : MonoBehaviour {
         nameInput.text = "Hello World";
         canvasGroup = nameInput.GetComponent<CanvasGroup>();
         UIBars = GameObject.Find("CanvasUI").FindObject("UIBars");
+        TimeDisplay = GameObject.Find("CanvasUI").FindObject("TimeDisplay");
     }
 
     public static void TransitionToGameUI()
@@ -27,6 +30,7 @@ public class UserInterfaceController : MonoBehaviour {
         nameInput.enabled = false;
         canvasGroup.blocksRaycasts = false; //prevents the ui from receiving input events
         UIBars.SetActive(true);
+        TimeDisplay.SetActive(true);
     }
 
     public static void TransitionToLobbyUI()
@@ -36,6 +40,7 @@ public class UserInterfaceController : MonoBehaviour {
         nameInput.enabled = true;
         canvasGroup.blocksRaycasts = true;
         UIBars.SetActive(false);
+        TimeDisplay.SetActive(false);
     }
 
     public void ToggleChatBox()

@@ -115,4 +115,17 @@ public class PlayerManager : NetworkBehaviour
         print("client is connecting: " + conn.connectionId);
     }*/
 
+    public static PlayerMetrics GetTopPlayer()
+    {
+        PlayerMetrics currentTop = playerList.Values.First();
+        foreach (PlayerMetrics pm in playerList.Values)
+        {
+            if (pm.kills > currentTop.kills)
+            {
+                currentTop = pm;
+            }
+        }
+        return currentTop;
+    }
+
 }
