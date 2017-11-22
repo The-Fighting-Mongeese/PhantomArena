@@ -16,10 +16,10 @@ public class MenuController : MonoBehaviour {
 	}
 
     public void Button1OnClick() {
-        SceneManager.LoadScene("DanielTerrainScene");
+        SceneManager.LoadScene("JasonWorkSpace");
     }
     public void Button2OnClick() {
-        SceneManager.LoadScene("JasonWorkSpace");
+        SceneManager.LoadScene("DanielTerrainScene");
     }
     public void Button3OnClick() {
         SceneManager.LoadScene("MarkusWorkSpace");
