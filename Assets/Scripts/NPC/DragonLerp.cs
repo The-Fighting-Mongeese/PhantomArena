@@ -10,23 +10,23 @@ public class DragonLerp : NetworkBehaviour
     public float updateRate = 0.2f; //how long we want to wait between position updates
     float progress, startTime;
 
-    /*
-    private void OnEnable()
+    public override void OnStartServer()
     {
-        
+        previousPosition = transform.position;
         if (isServer) StartCoroutine(UpdatePosition());
     }
 
     private void OnDisable()
     {
         StopAllCoroutines();
-    }*/
+    }
 
+    /*
     private void Start()
     {
         previousPosition = transform.position;
         if (isServer) StartCoroutine(UpdatePosition());
-    }
+    }*/
 
     private void Update()
     {
