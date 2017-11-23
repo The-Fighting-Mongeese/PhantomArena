@@ -81,6 +81,7 @@ public class PlayerManager : NetworkBehaviour
     {
         while (true)
         {
+            Debug.Log("Update players");
 
             foreach (KeyValuePair<int, PlayerMetrics> p in playerList.ToArray())
             {
@@ -89,8 +90,6 @@ public class PlayerManager : NetworkBehaviour
                     var players = GameObject.FindGameObjectsWithTag("Player");
                     foreach (var player in players)
                     {
-                        print(player.GetComponent<NetworkIdentity>().connectionToClient.connectionId);
-
                         if (player.GetComponent<NetworkIdentity>().connectionToClient.connectionId == p.Key)
                         {
                             PlayerMetrics _playerMetrics = player.GetComponent<PlayerMetrics>();

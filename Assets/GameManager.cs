@@ -12,6 +12,8 @@ using UnityEngine.UI;
 /// </summary>
 public class GameManager : NetworkBehaviour {
 
+    public bool initializeDatabase = true;
+
     public float gameDuration = 300f;   // seconds 
 
     public float timeLeft;
@@ -24,6 +26,12 @@ public class GameManager : NetworkBehaviour {
 
     private const short UpdateTimeLeftMsgCode = 420;
 
+
+    void Awake()
+    {
+        if (initializeDatabase)
+            DataService.InitializeDbConnection("PhantomArena.db");
+    }
 
     void Start ()
     {

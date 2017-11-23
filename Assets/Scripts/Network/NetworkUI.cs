@@ -42,7 +42,6 @@ public class NetworkUI : MonoBehaviour
                     {
                         lobbyCamera.gameObject.SetActive(false);
                         manager.StartHost();
-                        GameObject.Find("_GameManager").GetComponent<HealthPackSpawner>().CmdSpawnHealthPack();
                     }
                     else UserInterfaceController.nameInput.placeholder.GetComponent<Text>().text = "Name cannot be blank";
                 }
@@ -92,7 +91,6 @@ public class NetworkUI : MonoBehaviour
                         {
                             lobbyCamera.gameObject.SetActive(false);
                             manager.StartHost();
-                            GameObject.Find("_GameManager").GetComponent<HealthPackSpawner>().CmdSpawnHealthPack();
                         }
                         else UserInterfaceController.nameInput.placeholder.GetComponent<Text>().text = "Name cannot be blank";
                     }
