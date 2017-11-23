@@ -115,6 +115,12 @@ public class PlayerManager : NetworkBehaviour
         print("client is connecting: " + conn.connectionId);
     }*/
 
+    public static void Cleanup()
+    {
+        Debug.Log("Cleanup");
+        playerList.Clear();
+    }
+
     public static PlayerMetrics GetTopPlayer()
     {
         PlayerMetrics currentTop = playerList.Values.First();
