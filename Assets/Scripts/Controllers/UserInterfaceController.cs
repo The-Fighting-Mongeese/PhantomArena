@@ -1,50 +1,36 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class UserInterfaceController : MonoBehaviour {
-
-    public GameObject chatPanel;
-    public static GameObject UIBars;
-    public static GameObject TimeDisplay;
-
-    #region Lobby Interface Elements
-
-    public static CanvasGroup canvasGroup;
+public class UserInterfaceController : MonoBehaviour
+{
+    public static CanvasGroup lobbyGroup;
+    public static CanvasGroup gameGroup;
     public static InputField nameInput;
 
-    #endregion
-
-    void Start () {
-        chatPanel = GameObject.Find("ChatPanel");
+    void Start ()
+    {
         nameInput = GameObject.Find("nameInputField").GetComponent<InputField>();
-        nameInput.text = "Hello World";
-        canvasGroup = nameInput.GetComponent<CanvasGroup>();
-        UIBars = GameObject.Find("CanvasUI").FindObject("UIBars");
-        TimeDisplay = GameObject.Find("CanvasUI").FindObject("TimeDisplay");
+        nameInput.text = "Username";
+
+        lobbyGroup = GameObject.Find("CanvasUI").FindObject("LobbyUI").GetComponent<CanvasGroup>();
+        gameGroup = GameObject.Find("CanvasUI").FindObject("GameUI").GetComponent<CanvasGroup>();
     }
 
     public static void TransitionToGameUI()
     {
-        if (canvasGroup == null) return;
-        canvasGroup.alpha = 0f;
-        nameInput.enabled = false;
-        canvasGroup.blocksRaycasts = false; //prevents the ui from receiving input events
-        UIBars.SetActive(true);
-        TimeDisplay.SetActive(true);
+        gameGroup.FullyOn(true);
+        lobbyGroup.FullyOn(false);
     }
 
     public static void TransitionToLobbyUI()
     {
-        if (canvasGroup == null) return;
-        canvasGroup.alpha = 1f;
-        nameInput.enabled = true;
-        canvasGroup.blocksRaycasts = true;
-        UIBars.SetActive(false);
-        TimeDisplay.SetActive(false);
+        gameGroup.FullyOn(false);
+        lobbyGroup.FullyOn(true);
     }
 
-    public void ToggleChatBox()
+    public void ReturnToMenu()
     {
-        chatPanel.gameObject.SetActive(!chatPanel.activeSelf);
+        SceneManager.LoadScene("Menu");
     }
 }
