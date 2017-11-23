@@ -12,13 +12,17 @@ public class GameManager : NetworkBehaviour {
 
     public float timeLeft;
 
-    public Text timeDisplay; 
+    public Text timeDisplay;
+
+    public GameObject scoreboard;
 
 
 	// Use this for initialization
 	void Start ()
     {
         timeLeft = gameDuration;
+        Debug.Log("GameManager Start()");
+        CmdRetrieveCurrentTime();
 	}
 	
 	// Update is called once per frame
@@ -43,19 +47,25 @@ public class GameManager : NetworkBehaviour {
     void GameOver()
     {
         Debug.Log(PlayerManager.GetTopPlayer());
-        UpdateTimeDisplay();
+
+        scoreboard.SetActive(true);
+
+        StartCoroutine(EndGameAfterDelay(5f));
+
         this.enabled = false;
     }
 
     [Command]
     void CmdRetrieveCurrentTime()
     {
+        Debug.Log("Server TimeLeft: " + timeLeft);
         RpcRetrieveCurrentTime(timeLeft);
     }
 
     [ClientRpc]
     void RpcRetrieveCurrentTime(float time)
     {
+        Debug.Log("Rpc TimeLeft: " + timeLeft);
         timeLeft = time;
     }
 
@@ -68,6 +78,12 @@ public class GameManager : NetworkBehaviour {
 
         var timeString = String.Format("{0:00}:{1:00}", mins, secs);
         timeDisplay.text = timeString;
+    }
+
+    IEnumerator EndGameAfterDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        NetworkManagerCustom.singleton.StopHost();
     }
 
 }
