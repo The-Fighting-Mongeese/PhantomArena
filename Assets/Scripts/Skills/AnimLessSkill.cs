@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 // Simple version of skill that does not require an animation state / clip. Use for prototyping. 
 public abstract class AnimLessSkill : Skill
 {
-    protected virtual void Awake()
+    protected override void Awake()
     {
         // do not call base here
 

@@ -11,6 +11,9 @@ public class StrongAttack : Skill
     public int staminaRequired = 50;
     public int damage = 50;
     public float cooldown = 5f;         // seconds 
+    public ParticleSystem particles;
+    public WeaponTrail trails;
+    public AudioSource sfx; 
 
     private Stamina stamina;
 
@@ -42,6 +45,10 @@ public class StrongAttack : Skill
 
     protected override void SkillStart()
     {
+        particles.Play();
+        sfx.gameObject.SetActive(true);
+
+
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger += Activate;    // listen to weapon hits 
         player.skillLocked = true;
@@ -51,6 +58,9 @@ public class StrongAttack : Skill
 
     protected override void SkillEnd()
     {
+        particles.Stop();
+        sfx.gameObject.SetActive(false);
+
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger -= Activate;    // stop listening to weapon hits 
         player.weapon.DeactivateCollider();             // ensure weapon is deactivated

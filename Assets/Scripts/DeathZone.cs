@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ocean : MonoBehaviour {
+public class DeathZone : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
         Health target = other.transform.GetComponent<Health>();
         if(target != null)
         {
-            target.CmdTakeTrueDamage(target.currentHealth);
+            target.CmdTakeTrueDamage2(0, target.currentHealth);
         }
     }
 }

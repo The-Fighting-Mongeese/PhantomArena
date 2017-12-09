@@ -9,6 +9,7 @@ public class ForceChange : Skill
     public float cooldown = 5f;          
     public ForceChangeProjectile forceChangeProjectilePrefab;
     public Transform projectileSpawnLoc;
+    public AudioSource sfx; 
 
     private Mana mana;
     // private int netId; 
@@ -55,6 +56,7 @@ public class ForceChange : Skill
 
     protected override void SkillStart()
     {
+        sfx.Play();
         if (!isLocalPlayer) return;
         player.skillLocked = true;
         player.moveLocked = true;

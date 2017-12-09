@@ -11,15 +11,18 @@ public class AntiPhaseAttack : Skill
     public int manaRequired = 50;
     public int damage = 50;
     public float cooldown = 5f;         // seconds 
+    public Color[] vfxTrailColors;
+    public AudioSource sfx;
 
     private Mana mana;
     private int initialPhase;
-
+    private MeleeWeaponTrail trail; 
 
     protected override void Awake()
     {
         base.Awake();
         mana = GetComponent<Mana>();
+        trail = player.weapon.GetComponentInChildren<MeleeWeaponTrail>();
     }
 
 
@@ -50,6 +53,13 @@ public class AntiPhaseAttack : Skill
         player.weapon.GetComponent<PhasedMaterial>().ShowPhase(oppositePhase);
         player.weapon.gameObject.layer = oppositePhase;
 
+        // show vfx
+        trail._colors = vfxTrailColors;
+        trail.Emit = true;
+
+        // play sfx 
+        sfx.Play();
+
         if (!isLocalPlayer) return;
         
         // listen to weapon triggers
@@ -65,6 +75,9 @@ public class AntiPhaseAttack : Skill
         // revert back to intial phase 
         player.weapon.GetComponent<PhasedMaterial>().ShowPhase(initialPhase);
         player.weapon.gameObject.layer = initialPhase;
+
+        // stop vfx
+        trail.Emit = false;
 
         if (!isLocalPlayer) return;
 
