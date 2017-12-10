@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 public class ForceChange : Skill
 {
     public int manaRequired = 50;
-    public float cooldown = 5f;          
     public ForceChangeProjectile forceChangeProjectilePrefab;
     public Transform projectileSpawnLoc;
     public AudioSource sfx; 
@@ -46,12 +45,13 @@ public class ForceChange : Skill
 
     public override bool ConditionsMet()
     {
-        return (mana.CurrentMana >= manaRequired);
+        return (mana.CurrentMana >= manaRequired && cooldownCounter <= 0);
     }
 
     public override void ConsumeResources()
     {
         mana.TryUseMana(manaRequired);
+        cooldownCounter = cooldown;
     }
 
     protected override void SkillStart()

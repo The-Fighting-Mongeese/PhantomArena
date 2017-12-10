@@ -50,8 +50,8 @@ GameObject:
   - component: {fileID: 114932708440584032}
   - component: {fileID: 23782888197906050}
   - component: {fileID: 114424227352090532}
-  - component: {fileID: 114390783488668994}
   - component: {fileID: 114928089859944694}
+  - component: {fileID: 114390783488668994}
   - component: {fileID: 114321974989365938}
   - component: {fileID: 114013752531894518}
   - component: {fileID: 114712929900147468}
@@ -5093,9 +5093,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 121758821a0c24e45a6166c85c403f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 5
+  cooldownCounter: 0
   animStateId: ForceChange
   manaRequired: 50
-  cooldown: 5
   forceChangeProjectilePrefab: {fileID: 114426240350976534, guid: 7f27988e25afbe34da588acb1950f339,
     type: 2}
   projectileSpawnLoc: {fileID: 4833255379232754}
@@ -5326,10 +5327,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b86a6a0a9f77c43b4fafb94c142807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 2
+  cooldownCounter: 0
   animStateId: AntiPhaseAttack
   manaRequired: 50
   damage: 50
-  cooldown: 5
   vfxTrailColors:
   - {r: 0, g: 0.91724133, b: 1, a: 1}
   - {r: 0.586748, g: 0.12941176, b: 0.8745098, a: 1}
@@ -5373,12 +5375,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e048d885922df14299f7d018837ee06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 2
+  cooldownCounter: 0
   animStateId: StrongAttack
   staminaRequired: 50
   damage: 50
-  cooldown: 5
   particles: {fileID: 198932579821888332}
-  trails: {fileID: 0}
   sfx: {fileID: 82774712226174734}
 --- !u!114 &114405840961952836
 MonoBehaviour:
@@ -5713,10 +5715,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 925f2d0404d3362439b136a0dcb91a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 0.5
+  cooldownCounter: 0
   animStateId: BasicAttack
   staminaRequired: 10
   damage: 20
-  cooldown: 0.5
   sfx: {fileID: 114291541727207092}
   vfxTrailColors:
   - {r: 1, g: 0, b: 0, a: 1}

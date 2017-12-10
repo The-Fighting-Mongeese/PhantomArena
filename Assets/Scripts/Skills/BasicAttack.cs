@@ -10,7 +10,6 @@ public class BasicAttack : Skill
 {
     public int staminaRequired = 10;
     public int damage = 20;
-    public float cooldown = 0.5f;         // seconds 
     public AudioRandom sfx;
     public Color[] vfxTrailColors; 
 
@@ -30,12 +29,13 @@ public class BasicAttack : Skill
 
     public override bool ConditionsMet()
     {
-        return (stamina.CurrentStamina >= staminaRequired);
+        return (stamina.CurrentStamina >= staminaRequired && cooldownCounter <= 0);
     }
 
     public override void ConsumeResources()
     {
         stamina.TryUseStamina(staminaRequired);
+        cooldownCounter = cooldown;
     }
 
     public override void Activate(GameObject other)

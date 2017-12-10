@@ -10,7 +10,6 @@ public class StrongAttack : Skill
 {
     public int staminaRequired = 50;
     public int damage = 50;
-    public float cooldown = 5f;         // seconds 
     public ParticleSystem particles;
     public AudioSource sfx; 
 
@@ -28,12 +27,13 @@ public class StrongAttack : Skill
 
     public override bool ConditionsMet()
     {
-        return (stamina.CurrentStamina >= staminaRequired);
+        return (stamina.CurrentStamina >= staminaRequired && cooldownCounter <= 0);
     }
 
     public override void ConsumeResources()
     {
         stamina.TryUseStamina(staminaRequired);
+        cooldownCounter = cooldown;
     }
 
     public override void Activate(GameObject other)

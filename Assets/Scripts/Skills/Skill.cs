@@ -5,6 +5,8 @@ using UnityEngine.Networking;
 
 public abstract class Skill : NetworkBehaviour
 {
+    public float cooldown = 1f;
+    public float cooldownCounter = 0f;
     protected PlayerController player;
     protected SkillStateMachine animState;
     protected static int phantomLayer, physicalLayer;  // TODO: Probably move this out or find a better way to cache.
@@ -21,6 +23,15 @@ public abstract class Skill : NetworkBehaviour
             phantomLayer = LayerMask.NameToLayer("Phantom");
         if (physicalLayer == 0)
             physicalLayer = LayerMask.NameToLayer("Physical");
+    }
+
+    protected virtual void Update()
+    {
+        cooldownCounter -= Time.deltaTime;
+        if (cooldownCounter <= 0)
+        {
+            cooldownCounter = 0;
+        }
     }
 
     protected virtual void OnEnable()
