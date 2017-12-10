@@ -45,8 +45,6 @@ public class PlayerController : NetworkBehaviour
     [SerializeField]
     private Skill thirdSkill;
 
-    private Skill currentSkill;
-
     // Note: a more comprehensive setup would be to use a counter here (if multiple effects locked you) 
     public bool skillLocked = false;
     public bool phaseLocked = false;
@@ -126,7 +124,6 @@ public class PlayerController : NetworkBehaviour
                     Debug.Log("Basic attacking");
                     ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
                     basicAttack.ConsumeResources();
-                    currentSkill = basicAttack;
                 }
             }
             else if (Input.GetButtonDown("Skill1"))
@@ -135,7 +132,6 @@ public class PlayerController : NetworkBehaviour
                 {
                     ac.CmdNetworkedTrigger("SkillStrongAttackTrigger"); // TODO: Move to skill
                     firstSkill.ConsumeResources();
-                    currentSkill = firstSkill;
                 }
             }
             else if (Input.GetButtonDown("Skill2"))
@@ -144,7 +140,6 @@ public class PlayerController : NetworkBehaviour
                 {
                     ac.CmdNetworkedTrigger("SkillAntiPhaseAttackTrigger");
                     secondSkill.ConsumeResources();
-                    currentSkill = secondSkill;
                 }
             }
             else if (Input.GetButtonDown("Skill3"))
@@ -153,7 +148,6 @@ public class PlayerController : NetworkBehaviour
                 {
                     ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
                     thirdSkill.ConsumeResources();
-                    currentSkill = thirdSkill;
                 }
             }
         }
