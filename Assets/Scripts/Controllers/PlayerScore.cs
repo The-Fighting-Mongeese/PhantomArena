@@ -16,8 +16,5 @@ public class PlayerScore : MonoBehaviour {
         {
             scoreboard.SetActive(false);
         }
-
-
-       
 	}
 }

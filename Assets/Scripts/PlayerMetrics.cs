@@ -27,4 +27,9 @@ public class PlayerMetrics : NetworkBehaviour {
     {
         deaths = newDeaths;
     }
+
+    public override string ToString()
+    {
+        return string.Format("PlayerMetrics NetID: {0} Name: {1} Kills: {2} Deaths: {3}", netId, playername, kills, deaths);
+    }
 }

@@ -67,7 +67,7 @@ public class ScoreBoard : MonoBehaviour {
 
                 if(playerScoreboardList.childCount == 0)
                 {
-                    print("GetScores childCount 0");
+                    // print("GetScores childCount 0");
                     GameObject itemGO = Instantiate(playerScoreboardPrefab, playerScoreboardList);
                     PlayerScoreboardItem playerScoreItem = itemGO.GetComponent<PlayerScoreboardItem>();
                     if (playerScoreItem != null)

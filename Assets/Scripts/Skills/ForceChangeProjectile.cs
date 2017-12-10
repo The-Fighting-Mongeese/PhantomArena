@@ -9,6 +9,7 @@ public class ForceChangeProjectile : NetworkBehaviour {
     public float speed = 5f;
     public float projectileLifetime = 2f;
     public float phaseLockDuration = 4f;
+    public AudioClip blastSfx;
 
     [SerializeField]
     private GameObject explosionParticles;
@@ -50,6 +51,7 @@ public class ForceChangeProjectile : NetworkBehaviour {
 
             // play effects
             RpcBlast();
+            AudioSource.PlayClipAtPoint(blastSfx, transform.position);
 
             // game logic
             identity.RpcChangePhase(LayerHelper.Opposite(identity.gameObject.layer));

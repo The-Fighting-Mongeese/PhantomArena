@@ -11,6 +11,9 @@ public class PlayerController : NetworkBehaviour
     private float JUMP_DURATION = 1.0f;
 
     public WeaponCollider weapon;
+    public ThirdPersonCameraRig rig;
+    public AudioSource phaseChangeSfx;
+    public ParticleSystem phaseChangePhantomVfx, phaseChangePhysicalVfx;
 
     [SerializeField]
     private float speed = 10.0f;
@@ -31,8 +34,6 @@ public class PlayerController : NetworkBehaviour
     private Health health;
     private AnimateController ac;
     private PhasedMaterial[] phasedMaterials;
-    [SerializeField]
-    private ThirdPersonCameraRig rig;
     private SkillStateMachine deathBehaviour;
 
     [SerializeField]
@@ -248,6 +249,11 @@ public class PlayerController : NetworkBehaviour
         weapon.gameObject.layer = layer;            // Change weapon layer
         foreach (var pm in phasedMaterials)         // Change appearance
             pm.ShowPhase(layer);
+        if (layer == LayerHelper.PhysicalLayer)     // Play vfx
+            phaseChangePhysicalVfx.Play();
+        else
+            phaseChangePhantomVfx.Play();
+        phaseChangeSfx.Play();                      // Play sfx 
     }
 
     [ClientRpc]

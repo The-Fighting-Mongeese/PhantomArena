@@ -24,5 +24,21 @@ public class NetworkManagerCustom : NetworkManager {
         PlayerManager.UnRegisterPlayer(conn.connectionId);
     }
 
-    
+    public override void OnDestroyMatch(bool success, string extendedInfo)
+    {
+        base.OnDestroyMatch(success, extendedInfo);
+
+        Debug.Log("On destroy match called");
+    }
+
+    public override void OnStopServer()
+    {
+        base.OnStopServer();
+        totalNumberOfPlayers = 0;
+        PlayerManager.Cleanup();
+
+        Debug.Log("ON stop server called");
+    }
+
+
 }
