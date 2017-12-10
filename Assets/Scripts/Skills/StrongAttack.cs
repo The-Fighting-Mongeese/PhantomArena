@@ -12,7 +12,6 @@ public class StrongAttack : Skill
     public int damage = 50;
     public float cooldown = 5f;         // seconds 
     public ParticleSystem particles;
-    public WeaponTrail trails;
     public AudioSource sfx; 
 
     private Stamina stamina;
