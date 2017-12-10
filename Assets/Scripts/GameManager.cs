@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -68,9 +69,6 @@ public class GameManager : NetworkBehaviour {
     {
         Debug.Log(PlayerManager.GetTopPlayer());
         Debug.Log("Is server " + isServer);
-
-        StartCoroutine(EndGameAfterDelay(5f));
-
         RpcGameOver();
     }
 
@@ -78,6 +76,9 @@ public class GameManager : NetworkBehaviour {
     void RpcGameOver()
     {
         Debug.Log("RpcGameOver");
+
+        StartCoroutine(EndGameAfterDelay(5f));
+
         scoreboard.SetActive(true);
         this.enabled = false;
     }
@@ -96,7 +97,16 @@ public class GameManager : NetworkBehaviour {
     IEnumerator EndGameAfterDelay(float time)
     {
         yield return new WaitForSeconds(time);
-        NetworkManagerCustom.singleton.StopHost();
+
+        if (isServer)
+        {
+            Debug.Log("FOUND SERVER");
+            NetworkManagerCustom.singleton.StopHost();
+        }
+
+        // NUKE EVERYTHING AND RESTART.
+        Destroy(NetworkManagerCustom.singleton.gameObject);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     #region Network handlers 

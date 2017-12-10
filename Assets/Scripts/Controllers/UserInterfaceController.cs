@@ -31,6 +31,7 @@ public class UserInterfaceController : MonoBehaviour
 
     public void ReturnToMenu()
     {
+        Destroy(NetworkManagerCustom.singleton.gameObject); // ensure NetworkManager is destroyed so it is recreated properly.
         SceneManager.LoadScene("Menu");
     }
 }
