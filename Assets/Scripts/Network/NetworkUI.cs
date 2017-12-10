@@ -22,15 +22,20 @@ public class NetworkUI : MonoBehaviour
     void Awake()
     {
         manager = GetComponent<NetworkManager>();
-        //nameInput = GameObject.Find("nameInputField").GetComponent<InputField>();
         lobbyCamera = GameObject.Find("LobbyCamera").GetComponent<Camera>();
     }
-
 
     void Update()
     {
         if (!showGUI)
             return;
+
+        if (lobbyCamera == null)
+        {
+            var lobbyCamObject = GameObject.Find("LobbyCamera");
+            if (lobbyCamObject != null)
+                lobbyCamera = lobbyCamObject.GetComponent<Camera>();
+        }
 
         if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
         {
