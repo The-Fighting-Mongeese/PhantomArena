@@ -45,6 +45,11 @@ public class PlayerController : NetworkBehaviour
     [SerializeField]
     private Skill thirdSkill;
 
+    private SkillIndicator basicAttackIndicator;
+    private SkillIndicator firstSkillIndicator;
+    private SkillIndicator secondSkillIndicator;
+    private SkillIndicator thirdSkillIndicator;
+
     // Note: a more comprehensive setup would be to use a counter here (if multiple effects locked you) 
     public bool skillLocked = false;
     public bool phaseLocked = false;
@@ -61,6 +66,26 @@ public class PlayerController : NetworkBehaviour
         phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
+
+        basicAttackIndicator = GameObject.Find("CanvasUI").FindObject("BasicAttackIndicator").GetComponent<SkillIndicator>();
+        firstSkillIndicator = GameObject.Find("CanvasUI").FindObject("FirstSkillIndicator").GetComponent<SkillIndicator>();
+        secondSkillIndicator = GameObject.Find("CanvasUI").FindObject("SecondSkillIndicator").GetComponent<SkillIndicator>();
+        thirdSkillIndicator = GameObject.Find("CanvasUI").FindObject("ThirdSkillIndicator").GetComponent<SkillIndicator>();
+        
+        if (Application.platform == RuntimePlatform.PS4)
+        {
+            basicAttackIndicator.SetButtonNameText("???");
+            firstSkillIndicator.SetButtonNameText("???");
+            secondSkillIndicator.SetButtonNameText("???");
+            thirdSkillIndicator.SetButtonNameText("???");
+        }
+        else 
+        {
+            basicAttackIndicator.SetButtonNameText("Left-Click");
+            firstSkillIndicator.SetButtonNameText("1");
+            secondSkillIndicator.SetButtonNameText("2");
+            thirdSkillIndicator.SetButtonNameText("3");
+        }
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -151,6 +176,11 @@ public class PlayerController : NetworkBehaviour
                 }
             }
         }
+
+        basicAttackIndicator.UpdateUI(basicAttack.ConditionsMet() && !skillLocked, basicAttack.cooldownCounter);
+        firstSkillIndicator.UpdateUI(firstSkill.ConditionsMet() && !skillLocked, firstSkill.cooldownCounter);
+        secondSkillIndicator.UpdateUI(secondSkill.ConditionsMet() && !skillLocked, secondSkill.cooldownCounter);
+        thirdSkillIndicator.UpdateUI(thirdSkill.ConditionsMet() && !skillLocked, thirdSkill.cooldownCounter);
     }
 
     private void FixedUpdate()
