@@ -72,20 +72,24 @@ public class PlayerController : NetworkBehaviour
         secondSkillIndicator = GameObject.Find("CanvasUI").FindObject("SecondSkillIndicator").GetComponent<SkillIndicator>();
         thirdSkillIndicator = GameObject.Find("CanvasUI").FindObject("ThirdSkillIndicator").GetComponent<SkillIndicator>();
         
-        if (Application.platform == RuntimePlatform.PS4)
-        {
-            basicAttackIndicator.SetButtonNameText("???");
-            firstSkillIndicator.SetButtonNameText("???");
-            secondSkillIndicator.SetButtonNameText("???");
-            thirdSkillIndicator.SetButtonNameText("???");
-        }
-        else 
-        {
-            basicAttackIndicator.SetButtonNameText("Left-Click");
-            firstSkillIndicator.SetButtonNameText("1");
-            secondSkillIndicator.SetButtonNameText("2");
-            thirdSkillIndicator.SetButtonNameText("3");
-        }
+    #if UNITY_PS4
+        basicAttackIndicator.SetButtonNameText("???");
+        firstSkillIndicator.SetButtonNameText("???");
+        secondSkillIndicator.SetButtonNameText("???");
+        thirdSkillIndicator.SetButtonNameText("???");
+    #endif
+    #if UNITY_EDITOR
+        basicAttackIndicator.SetButtonNameText("Left-Click");
+        firstSkillIndicator.SetButtonNameText("1");
+        secondSkillIndicator.SetButtonNameText("2");
+        thirdSkillIndicator.SetButtonNameText("3");
+    #endif
+    #if UNITY_STANDALONE_WIN
+        basicAttackIndicator.SetButtonNameText("Left-Click");
+        firstSkillIndicator.SetButtonNameText("1");
+        secondSkillIndicator.SetButtonNameText("2");
+        thirdSkillIndicator.SetButtonNameText("3");
+    #endif
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
