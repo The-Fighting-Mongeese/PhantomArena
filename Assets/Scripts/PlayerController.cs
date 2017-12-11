@@ -89,10 +89,14 @@ public class PlayerController : NetworkBehaviour
         firstSkillIndicator.SetButtonNameText("1");
         secondSkillIndicator.SetButtonNameText("2");
         thirdSkillIndicator.SetButtonNameText("3");
-    #endif
+#endif
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        if (isLocalPlayer)  // Note: Unnecessary check - PlayerSetup disable this component;
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
         // customize death
         deathBehaviour = ac.anim.GetBehaviour<SkillStateMachine>("Death");
         if (deathBehaviour != null)
@@ -249,6 +253,12 @@ public class PlayerController : NetworkBehaviour
 
     public void OnDestroy()
     {
+        if (isLocalPlayer)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
         if (deathBehaviour != null)
         {
             deathBehaviour.OnStateEntered -= OnDeath;
@@ -321,19 +331,20 @@ public class PlayerController : NetworkBehaviour
     {
         // Drawing core bounds (Note: the calculations are correct, do not use half coreHeight)
         DebugExtension.DrawCapsule(transform.position + (transform.up * coreHeight), transform.position - (transform.up * coreHeight), coreRadius);
+        Debug.DrawLine(transform.position, transform.position - (Vector3.up * 1.1f));
     }
 
     bool IsGrounded()
     {
         if (gameObject.layer == physicalLayer) 
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << phantomLayer));
+            return Physics.Raycast(transform.position, -Vector3.up, 1.1f, LayerHelper.WalkablePhysical);
         }
         if (gameObject.layer == phantomLayer)
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << physicalLayer));
+            return Physics.Raycast(transform.position, -Vector3.up, 1.1f, LayerHelper.WalkablePhysical);
         }
-        return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f);
+        return Physics.Raycast(transform.position, -Vector3.up, 1.1f);
     }
 
     private void OnDeath()

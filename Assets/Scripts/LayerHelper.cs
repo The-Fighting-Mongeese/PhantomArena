@@ -11,13 +11,17 @@ public class LayerHelper : MonoBehaviour {
     public static int PhysicalLayer { get; set; }
     public static int PhantomLayer { get; set; }
     public static int GaiaLayer { get; set; }
-
+    public static int WalkablePhysical { get; set; }
+    public static int WalkablePhantom { get; set; }
 
     void Awake()
     {
         PhantomLayer    = LayerMask.NameToLayer("Phantom");
         PhysicalLayer   = LayerMask.NameToLayer("Physical");
         GaiaLayer       = LayerMask.NameToLayer("Gaia");
+
+        WalkablePhysical = LayerMask.GetMask("Phantom", "Gaia");
+        WalkablePhantom  = LayerMask.GetMask("Physical", "Gaia");
     }
 
     public static int Opposite(int layer)
