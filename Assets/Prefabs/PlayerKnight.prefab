@@ -5200,9 +5200,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74a1387f665ff8642966b5e7a9b78b83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 1
+  cooldownCounter: 0
+  animStateId: 
   healAuraPrefab: {fileID: 1190947215570074}
-  timeAliveSeconds: 5
   healAmountPerTenthSecond: 1
+  manaCostInitial: 20
   manaCostPerTenthSecond: 1
 --- !u!114 &114216346954865302
 MonoBehaviour:
@@ -5362,6 +5365,8 @@ MonoBehaviour:
   firstSkill: {fileID: 114390783488668994}
   secondSkill: {fileID: 114321974989365938}
   thirdSkill: {fileID: 114013752531894518}
+  fourthSkill: {fileID: 114407697061368792}
+  fifthSkil: {fileID: 114161476893564030}
   skillLocked: 0
   phaseLocked: 0
   moveLocked: 0
@@ -5427,6 +5432,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3f7a102415c4e7449a7c3b26029a066, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 1
+  cooldownCounter: 0
+  animStateId: 
   lightningStrikePrefab: {fileID: 1381260812198820, guid: d4064dc6f4d3153449d4767d6c778357,
     type: 2}
   lightningAliveTime: 15
@@ -5915,9 +5923,9 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   m_Radius: 0.2
-  m_Height: 1.3471193
+  m_Height: 1.5840762
   m_Direction: 1
-  m_Center: {x: -0.000005203097, y: 0.7514166, z: 0.00000011309258}
+  m_Center: {x: -0.000005205846, y: 0.8698949, z: 0.0000002601479}
 --- !u!136 &136560916119668816
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -44,6 +44,10 @@ public class PlayerController : NetworkBehaviour
     private Skill secondSkill;
     [SerializeField]
     private Skill thirdSkill;
+    [SerializeField]
+    private Skill fourthSkill;
+    [SerializeField]
+    private Skill fifthSkil;
 
     private SkillIndicator basicAttackIndicator;
     private SkillIndicator firstSkillIndicator;
@@ -181,6 +185,22 @@ public class PlayerController : NetworkBehaviour
                 {
                     ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
                     thirdSkill.ConsumeResources();
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                if (fourthSkill.ConditionsMet())
+                {
+                    fourthSkill.Activate(null);     // note: AnimLessSkill
+                    fourthSkill.ConsumeResources();
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                if (fifthSkil.ConditionsMet())
+                {
+                    fifthSkil.ConsumeResources();
+                    fifthSkil.Activate(null);     // warning: order matters note: AnimLessSkill 
                 }
             }
         }

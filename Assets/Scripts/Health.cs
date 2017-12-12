@@ -21,6 +21,10 @@ public class Health : NetworkBehaviour
 
     public bool alive = true;
 
+    public delegate void VoidDelegate();
+
+    public VoidDelegate OnDeath;
+
     private UIBar _healthBar;       // health bar HUD (for current player only)
 
 
@@ -70,6 +74,7 @@ public class Health : NetworkBehaviour
     [Command]
     public void CmdTakeTrueDamage(int amount)
     {
+        Debug.LogWarning("CALLING DEPRECATED TAKE DAMAGE");
         Debug.Log("Current life " + currentHealth + " amount " + amount);
         if (!alive) return;
 
@@ -112,6 +117,14 @@ public class Health : NetworkBehaviour
             Debug.Log("Dieing");
             alive = false;
             currentHealth = 0;
+
+            // raise raise 
+            if (OnDeath != null)
+            {
+                Debug.Log("DIEING AND EVENT IS OK");
+                OnDeath();
+
+            }
 
             // play death animation if it has one 
             var animc = GetComponent<AnimateController>();

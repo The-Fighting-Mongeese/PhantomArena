@@ -644,26 +644,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 136554912805235290, guid: ff834ff1ebd9ecd4e9e06cb83fdd0680,
-        type: 2}
-      propertyPath: m_Height
-      value: 1.5840762
-      objectReference: {fileID: 0}
-    - target: {fileID: 136554912805235290, guid: ff834ff1ebd9ecd4e9e06cb83fdd0680,
-        type: 2}
-      propertyPath: m_Center.x
-      value: -0.000005205846
-      objectReference: {fileID: 0}
-    - target: {fileID: 136554912805235290, guid: ff834ff1ebd9ecd4e9e06cb83fdd0680,
-        type: 2}
-      propertyPath: m_Center.y
-      value: 0.8698949
-      objectReference: {fileID: 0}
-    - target: {fileID: 136554912805235290, guid: ff834ff1ebd9ecd4e9e06cb83fdd0680,
-        type: 2}
-      propertyPath: m_Center.z
-      value: 0.0000002601479
-      objectReference: {fileID: 0}
     - target: {fileID: 1006755277417678, guid: ff834ff1ebd9ecd4e9e06cb83fdd0680, type: 2}
       propertyPath: m_IsActive
       value: 0
