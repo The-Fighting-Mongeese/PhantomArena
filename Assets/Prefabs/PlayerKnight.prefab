@@ -5213,7 +5213,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1006755277417678}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
@@ -5367,9 +5367,6 @@ MonoBehaviour:
   thirdSkill: {fileID: 114013752531894518}
   fourthSkill: {fileID: 0}
   fifthSkil: {fileID: 0}
-  skillLocked: 0
-  phaseLocked: 0
-  moveLocked: 0
 --- !u!114 &114390783488668994
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6446,7 +6443,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: -1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.00001716614, y: -0.000009536744, z: -29.99871}
+  m_ConnectedAnchor: {x: -0.000018119814, y: -0.00000858307, z: -29.998709}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
