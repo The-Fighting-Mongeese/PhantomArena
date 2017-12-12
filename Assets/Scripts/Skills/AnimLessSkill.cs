@@ -18,6 +18,11 @@ public abstract class AnimLessSkill : Skill
             physicalLayer = LayerMask.NameToLayer("Physical");
     }
 
+    protected override void Update()
+    {
+        base.Update();  // call base here (for cooldown)
+    }
+
     protected override void OnEnable()
     {
         // do not call base here

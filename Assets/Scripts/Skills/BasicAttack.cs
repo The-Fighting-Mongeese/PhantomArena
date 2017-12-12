@@ -10,7 +10,6 @@ public class BasicAttack : Skill
 {
     public int staminaRequired = 10;
     public int damage = 20;
-    public AudioRandom sfx;
     public Color[] vfxTrailColors; 
 
     private Stamina stamina;
@@ -40,35 +39,33 @@ public class BasicAttack : Skill
 
     public override void Activate(GameObject other)
     {
-        sfx.Play();
         if (!isLocalPlayer) return;
         base.CmdDamage(other, damage);
     }
 
     protected override void SkillStart()
     {
+        base.SkillStart();
+
         trail._colors = vfxTrailColors;
         trail.Emit = true;
 
         if (!isLocalPlayer) return;
+
         player.weapon.OnOpponentTrigger += Activate;    // listen to weapon hits 
-
-        player.skillLocked = true;
-        player.moveLocked = true;
-
         transform.rotation = Quaternion.LookRotation(player.rig.FlatForward());    // face camera 
     }
 
     protected override void SkillEnd()
     {
+        base.SkillEnd();
+
         trail.Emit = false;
 
         if (!isLocalPlayer) return;
+
         player.weapon.OnOpponentTrigger -= Activate;    // stop listening to weapon hits 
         player.weapon.DeactivateCollider();             // ensure weapon is deactivated
-
-        player.skillLocked = false;
-        player.moveLocked = false;
     }
 
     #endregion
