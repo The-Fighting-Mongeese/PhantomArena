@@ -13,7 +13,7 @@ public class Bow : NetworkBehaviour {
 
 
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.Alpha4)) bow.SetActive(true);    
+        if (Input.GetKeyDown(KeyCode.F1)) bow.SetActive(true);    
         if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3)) bow.SetActive(false);
 
 
