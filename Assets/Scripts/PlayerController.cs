@@ -187,7 +187,7 @@ public class PlayerController : NetworkBehaviour
                     thirdSkill.ConsumeResources();
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            else if (Input.GetButtonDown("Skill4"))
             {
                 if (fourthSkill.ConditionsMet())
                 {
@@ -195,7 +195,7 @@ public class PlayerController : NetworkBehaviour
                     fourthSkill.ConsumeResources();
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            else if (Input.GetButtonDown("Skill5"))
             {
                 if (fifthSkil.ConditionsMet())
                 {
