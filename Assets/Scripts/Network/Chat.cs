@@ -20,8 +20,8 @@ public class Chat : NetworkBehaviour {
 
     private void Start()
     {
-        chatText = GameObject.Find("chatText").GetComponent<Text>();
-        inputField = GameObject.Find("InputField").GetComponent<InputField>();
+        //chatText = GameObject.Find("chatText").GetComponent<Text>();
+        //inputField = GameObject.Find("InputField").GetComponent<InputField>();
         nameInput = GameObject.Find("nameInputField").GetComponent<InputField>();
 
         if (!isLocalPlayer)
@@ -40,35 +40,28 @@ public class Chat : NetworkBehaviour {
     [Command]
     void CmdGetPlayerProfile(string name)
     {
-        playerProfileController = new PlayerProfileController();
-        PlayerProfile _profile = playerProfileController.GetPlayerProfile(name);
-        RpcSetPlayerProfile(_profile.Id, _profile.Name, _profile.Level);
+        //playerProfileController = new PlayerProfileController();
+        //PlayerProfile _profile = playerProfileController.GetPlayerProfile(name);
+        RpcSetPlayerProfile(name);
         GetComponent<PlayerMetrics>().netID = connectionToClient.connectionId;
     }
 
     [ClientRpc]
-    void RpcSetPlayerProfile(int id, string name, int level)
+    void RpcSetPlayerProfile(string name)
     {
+        /*
         currentProfile = new PlayerProfile();
         currentProfile.Id = id;
         currentProfile.Name = name;
         currentProfile.Level = level;
+        */
         this.pName = name;
         playerNameText.text = pName;
         this.gameObject.name = pName + this.GetComponent<NetworkIdentity>().netId;
         GetComponent<PlayerMetrics>().playername = pName;
     }
 
-    [Command]
-    void CmdListPlayers()
-    {
-        foreach (var person in playerProfileController.GetPlayers())
-        {
-            print(person.ToString());
-        }
-    }
-
-
+    /*
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
@@ -80,11 +73,6 @@ public class Chat : NetworkBehaviour {
             CmdSendChatMessage( currentProfile.Name + "(Level " + currentProfile.Level + "): " + _message);
 
         }
-
-        //if (Input.GetKeyDown(KeyCode.Escape))
-        //inputField.text = "";
-        //CmdListPlayers();
-        
 
     }
 
@@ -110,5 +98,6 @@ public class Chat : NetworkBehaviour {
             chatText.text += s + "\n";
         }
     }
+    */
 
 }

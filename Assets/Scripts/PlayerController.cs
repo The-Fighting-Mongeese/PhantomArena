@@ -131,7 +131,7 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetButtonDown("Cancel"))
         {
             //Cursor.visible = mouseVisible;
             if (mouseVisible)
@@ -163,7 +163,7 @@ public class PlayerController : NetworkBehaviour
         // Handle phase change 
         if (!phaseLocked)
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetButtonDown("PhaseChange"))
             {
                 AttemptPhaseChange();
             }
@@ -176,7 +176,6 @@ public class PlayerController : NetworkBehaviour
             {
                 if (basicAttack.ConditionsMet())
                 {
-                    Debug.Log("Basic attacking");
                     ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
                     basicAttack.ConsumeResources();
                 }
@@ -266,7 +265,7 @@ public class PlayerController : NetworkBehaviour
 
             // jumping
             // GetKey(not down) here to keep applying the jump vel until IsGrounded is false
-            if (Input.GetKey(KeyCode.Space))    
+            if (Input.GetButton("Jump"))    
             {
                 ac.CmdNetworkedTrigger("JumpTrigger");
                 vel.y = -Physics.gravity.y * 0.5f * JUMP_DURATION;
@@ -404,17 +403,3 @@ public class PlayerController : NetworkBehaviour
         }
     }
 }
-
-/* Function to combine layers. 
-int CombineLayers(params string[] layers)
-{
-    int finalLayerMask = 0;
-    foreach (string s in layers)
-    {
-        var layer = LayerMask.NameToLayer(s);
-        finalLayerMask = finalLayerMask | layer;
-    }
-    return finalLayerMask;
-}
-*/
-

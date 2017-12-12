@@ -30,8 +30,7 @@ public class GameManager : NetworkBehaviour {
 
     void Awake()
     {
-        if (initializeDatabase)
-            DataService.InitializeDbConnection("PhantomArena.db");
+        //if (initializeDatabase)DataService.InitializeDbConnection("PhantomArena.db");
     }
 
     void Start ()
