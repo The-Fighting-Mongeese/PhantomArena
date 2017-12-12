@@ -362,7 +362,7 @@ public class PlayerController : NetworkBehaviour
         }
         if (gameObject.layer == phantomLayer)
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 1.1f, LayerHelper.WalkablePhysical);
+            return Physics.Raycast(transform.position, -Vector3.up, 1.1f, LayerHelper.WalkablePhantom);
         }
         return Physics.Raycast(transform.position, -Vector3.up, 1.1f);
     }

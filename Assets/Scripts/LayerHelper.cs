@@ -20,8 +20,8 @@ public class LayerHelper : MonoBehaviour {
         PhysicalLayer   = LayerMask.NameToLayer("Physical");
         GaiaLayer       = LayerMask.NameToLayer("Gaia");
 
-        WalkablePhysical = LayerMask.GetMask("Phantom", "Gaia");
-        WalkablePhantom  = LayerMask.GetMask("Physical", "Gaia");
+        WalkablePhysical = LayerMask.GetMask("Physical", "Gaia");
+        WalkablePhantom  = LayerMask.GetMask("Phantom", "Gaia");
     }
 
     public static int Opposite(int layer)
