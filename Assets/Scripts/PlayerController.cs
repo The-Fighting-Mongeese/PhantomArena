@@ -220,7 +220,7 @@ public class PlayerController : NetworkBehaviour
             }
             // jumping
             // GetKey(not down) here to keep applying the jump vel until IsGrounded is false
-            if (Input.GetButtonDown("Jump"))    
+            if (Input.GetButton("Jump"))    
             {
                 vel.y = 9.81f * 0.5f * JUMP_DURATION;
             }
