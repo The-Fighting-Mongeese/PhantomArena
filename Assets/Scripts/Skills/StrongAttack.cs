@@ -10,7 +10,8 @@ public class StrongAttack : Skill
 {
     public int staminaRequired = 50;
     public int damage = 50;
-    public float cooldown = 5f;         // seconds 
+    public ParticleSystem particles;
+    public AudioSource sfx; 
 
     private Stamina stamina;
 
@@ -26,12 +27,13 @@ public class StrongAttack : Skill
 
     public override bool ConditionsMet()
     {
-        return (stamina.CurrentStamina >= staminaRequired);
+        return (stamina.CurrentStamina >= staminaRequired && cooldownCounter <= 0);
     }
 
     public override void ConsumeResources()
     {
         stamina.TryUseStamina(staminaRequired);
+        cooldownCounter = cooldown;
     }
 
     public override void Activate(GameObject other)
@@ -42,13 +44,22 @@ public class StrongAttack : Skill
 
     protected override void SkillStart()
     {
+        particles.Play();
+        sfx.gameObject.SetActive(true);
+
+
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger += Activate;    // listen to weapon hits 
         player.skillLocked = true;
+
+        transform.rotation = Quaternion.LookRotation(player.rig.FlatForward());    // face camera 
     }
 
     protected override void SkillEnd()
     {
+        particles.Stop();
+        sfx.gameObject.SetActive(false);
+
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger -= Activate;    // stop listening to weapon hits 
         player.weapon.DeactivateCollider();             // ensure weapon is deactivated

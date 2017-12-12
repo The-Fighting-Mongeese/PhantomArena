@@ -81,6 +81,7 @@ public class PlayerManager : NetworkBehaviour
     {
         while (true)
         {
+            Debug.Log("Update players");
 
             foreach (KeyValuePair<int, PlayerMetrics> p in playerList.ToArray())
             {
@@ -89,8 +90,6 @@ public class PlayerManager : NetworkBehaviour
                     var players = GameObject.FindGameObjectsWithTag("Player");
                     foreach (var player in players)
                     {
-                        print(player.GetComponent<NetworkIdentity>().connectionToClient.connectionId);
-
                         if (player.GetComponent<NetworkIdentity>().connectionToClient.connectionId == p.Key)
                         {
                             PlayerMetrics _playerMetrics = player.GetComponent<PlayerMetrics>();
@@ -114,5 +113,24 @@ public class PlayerManager : NetworkBehaviour
     {
         print("client is connecting: " + conn.connectionId);
     }*/
+
+    public static void Cleanup()
+    {
+        Debug.Log("Cleanup");
+        playerList.Clear();
+    }
+
+    public static PlayerMetrics GetTopPlayer()
+    {
+        PlayerMetrics currentTop = playerList.Values.First();
+        foreach (PlayerMetrics pm in playerList.Values)
+        {
+            if (pm.kills > currentTop.kills)
+            {
+                currentTop = pm;
+            }
+        }
+        return currentTop;
+    }
 
 }

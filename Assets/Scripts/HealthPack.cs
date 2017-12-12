@@ -44,18 +44,4 @@ public class HealthPack : MonoBehaviour {
             StartCoroutine(DisableHealthPack());
         }
     }
-
-    /*
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.tag == "Player")
-        {
-            collision.collider.GetComponent<Health>().Heal(20);   
-            StartCoroutine(DisableHealthPack());
-        }
-    } */
-
-
-
-
 }

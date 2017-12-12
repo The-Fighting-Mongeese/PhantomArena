@@ -11,6 +11,9 @@ public class PlayerController : NetworkBehaviour
     private float JUMP_DURATION = 1.0f;
 
     public WeaponCollider weapon;
+    public ThirdPersonCameraRig rig;
+    public AudioSource phaseChangeSfx;
+    public ParticleSystem phaseChangePhantomVfx, phaseChangePhysicalVfx;
 
     [SerializeField]
     private float speed = 10.0f;
@@ -31,8 +34,6 @@ public class PlayerController : NetworkBehaviour
     private Health health;
     private AnimateController ac;
     private PhasedMaterial[] phasedMaterials;
-    [SerializeField]
-    private ThirdPersonCameraRig rig;
     private SkillStateMachine deathBehaviour;
 
     [SerializeField]
@@ -44,7 +45,10 @@ public class PlayerController : NetworkBehaviour
     [SerializeField]
     private Skill thirdSkill;
 
-    private Skill currentSkill;
+    private SkillIndicator basicAttackIndicator;
+    private SkillIndicator firstSkillIndicator;
+    private SkillIndicator secondSkillIndicator;
+    private SkillIndicator thirdSkillIndicator;
 
     // Note: a more comprehensive setup would be to use a counter here (if multiple effects locked you) 
     public bool skillLocked = false;
@@ -62,6 +66,30 @@ public class PlayerController : NetworkBehaviour
         phasedMaterials = GetComponentsInChildren<PhasedMaterial>();
         phantomLayer = LayerMask.NameToLayer("Phantom");
         physicalLayer = LayerMask.NameToLayer("Physical");
+
+        basicAttackIndicator = GameObject.Find("CanvasUI").FindObject("BasicAttackIndicator").GetComponent<SkillIndicator>();
+        firstSkillIndicator = GameObject.Find("CanvasUI").FindObject("FirstSkillIndicator").GetComponent<SkillIndicator>();
+        secondSkillIndicator = GameObject.Find("CanvasUI").FindObject("SecondSkillIndicator").GetComponent<SkillIndicator>();
+        thirdSkillIndicator = GameObject.Find("CanvasUI").FindObject("ThirdSkillIndicator").GetComponent<SkillIndicator>();
+        
+    #if UNITY_PS4
+        basicAttackIndicator.SetButtonNameText("???");
+        firstSkillIndicator.SetButtonNameText("???");
+        secondSkillIndicator.SetButtonNameText("???");
+        thirdSkillIndicator.SetButtonNameText("???");
+    #endif
+    #if UNITY_EDITOR
+        basicAttackIndicator.SetButtonNameText("Left-Click");
+        firstSkillIndicator.SetButtonNameText("1");
+        secondSkillIndicator.SetButtonNameText("2");
+        thirdSkillIndicator.SetButtonNameText("3");
+    #endif
+    #if UNITY_STANDALONE_WIN
+        basicAttackIndicator.SetButtonNameText("Left-Click");
+        firstSkillIndicator.SetButtonNameText("1");
+        secondSkillIndicator.SetButtonNameText("2");
+        thirdSkillIndicator.SetButtonNameText("3");
+    #endif
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -125,7 +153,6 @@ public class PlayerController : NetworkBehaviour
                     Debug.Log("Basic attacking");
                     ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
                     basicAttack.ConsumeResources();
-                    currentSkill = basicAttack;
                 }
             }
             else if (Input.GetButtonDown("Skill1"))
@@ -134,7 +161,6 @@ public class PlayerController : NetworkBehaviour
                 {
                     ac.CmdNetworkedTrigger("SkillStrongAttackTrigger"); // TODO: Move to skill
                     firstSkill.ConsumeResources();
-                    currentSkill = firstSkill;
                 }
             }
             else if (Input.GetButtonDown("Skill2"))
@@ -143,7 +169,6 @@ public class PlayerController : NetworkBehaviour
                 {
                     ac.CmdNetworkedTrigger("SkillAntiPhaseAttackTrigger");
                     secondSkill.ConsumeResources();
-                    currentSkill = secondSkill;
                 }
             }
             else if (Input.GetButtonDown("Skill3"))
@@ -152,10 +177,14 @@ public class PlayerController : NetworkBehaviour
                 {
                     ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
                     thirdSkill.ConsumeResources();
-                    currentSkill = thirdSkill;
                 }
             }
         }
+
+        basicAttackIndicator.UpdateUI(basicAttack.ConditionsMet() && !skillLocked, basicAttack.cooldownCounter);
+        firstSkillIndicator.UpdateUI(firstSkill.ConditionsMet() && !skillLocked, firstSkill.cooldownCounter);
+        secondSkillIndicator.UpdateUI(secondSkill.ConditionsMet() && !skillLocked, secondSkill.cooldownCounter);
+        thirdSkillIndicator.UpdateUI(thirdSkill.ConditionsMet() && !skillLocked, thirdSkill.cooldownCounter);
     }
 
     private void FixedUpdate()
@@ -248,6 +277,11 @@ public class PlayerController : NetworkBehaviour
         weapon.gameObject.layer = layer;            // Change weapon layer
         foreach (var pm in phasedMaterials)         // Change appearance
             pm.ShowPhase(layer);
+        if (layer == LayerHelper.PhysicalLayer)     // Play vfx
+            phaseChangePhysicalVfx.Play();
+        else
+            phaseChangePhantomVfx.Play();
+        phaseChangeSfx.Play();                      // Play sfx 
     }
 
     [ClientRpc]

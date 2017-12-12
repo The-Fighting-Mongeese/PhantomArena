@@ -5,6 +5,8 @@ using UnityEngine.Networking;
 
 public abstract class Skill : NetworkBehaviour
 {
+    public float cooldown = 1f;
+    public float cooldownCounter = 0f;
     protected PlayerController player;
     protected SkillStateMachine animState;
     protected static int phantomLayer, physicalLayer;  // TODO: Probably move this out or find a better way to cache.
@@ -21,6 +23,15 @@ public abstract class Skill : NetworkBehaviour
             phantomLayer = LayerMask.NameToLayer("Phantom");
         if (physicalLayer == 0)
             physicalLayer = LayerMask.NameToLayer("Physical");
+    }
+
+    protected virtual void Update()
+    {
+        cooldownCounter -= Time.deltaTime;
+        if (cooldownCounter <= 0)
+        {
+            cooldownCounter = 0;
+        }
     }
 
     protected virtual void OnEnable()
@@ -50,7 +61,8 @@ public abstract class Skill : NetworkBehaviour
     // Warning: This function is called multiple times (once for each Skill script), not recomended on release version.
     public void AnimEvent_ActivateWeaponCollider() { if (isLocalPlayer) player.weapon.ActivateCollider(); }
     public void AnimEvent_DeactivateWeaponCollider() { if (isLocalPlayer) player.weapon.DeactivateCollider(); }
-
+    public void AnimEvent_SetSkillLocked(int locked) { if (isLocalPlayer) player.skillLocked = locked > 0 ? true : false; }
+    public void AnimEvent_SetMoveLocked(int locked) { if (isLocalPlayer) player.moveLocked = locked > 0 ? true : false; }
 
     // Interface functions inheriting scripts need to implement. 
     public abstract bool ConditionsMet();               // to check whether or not this skill can be casted

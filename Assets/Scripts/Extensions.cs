@@ -16,4 +16,20 @@ public static class Extensions
         }
         return null;
     }
+
+    public static void FullyOn(this CanvasGroup group, bool on)
+    {
+        if (on)
+        {
+            group.alpha = 1f;
+            group.interactable = true;
+            group.blocksRaycasts = true;
+        }
+        else
+        {
+            group.alpha = 0;
+            group.interactable = false;
+            group.blocksRaycasts = false;
+        }
+    }
 }

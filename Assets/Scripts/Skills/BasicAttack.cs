@@ -10,15 +10,18 @@ public class BasicAttack : Skill
 {
     public int staminaRequired = 10;
     public int damage = 20;
-    public float cooldown = 0.5f;         // seconds 
+    public AudioRandom sfx;
+    public Color[] vfxTrailColors; 
 
     private Stamina stamina;
+    private MeleeWeaponTrail trail;
 
 
     protected override void Awake()
     {
         base.Awake();
         stamina = GetComponent<Stamina>();
+        trail = player.weapon.GetComponentInChildren<MeleeWeaponTrail>();
     }
 
 
@@ -26,31 +29,40 @@ public class BasicAttack : Skill
 
     public override bool ConditionsMet()
     {
-        return (stamina.CurrentStamina >= staminaRequired);
+        return (stamina.CurrentStamina >= staminaRequired && cooldownCounter <= 0);
     }
 
     public override void ConsumeResources()
     {
         stamina.TryUseStamina(staminaRequired);
+        cooldownCounter = cooldown;
     }
 
     public override void Activate(GameObject other)
     {
+        sfx.Play();
         if (!isLocalPlayer) return;
         base.CmdDamage(other, damage);
     }
 
     protected override void SkillStart()
     {
+        trail._colors = vfxTrailColors;
+        trail.Emit = true;
+
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger += Activate;    // listen to weapon hits 
 
         player.skillLocked = true;
         player.moveLocked = true;
+
+        transform.rotation = Quaternion.LookRotation(player.rig.FlatForward());    // face camera 
     }
 
     protected override void SkillEnd()
     {
+        trail.Emit = false;
+
         if (!isLocalPlayer) return;
         player.weapon.OnOpponentTrigger -= Activate;    // stop listening to weapon hits 
         player.weapon.DeactivateCollider();             // ensure weapon is deactivated

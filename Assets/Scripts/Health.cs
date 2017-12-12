@@ -7,6 +7,8 @@ public class Health : NetworkBehaviour
 {
     public GameObject model;
     public GameObject ragdoll;
+    public AudioSource deathSfx;
+    public ParticleSystem hitVfx;
 
     public int maxHealth = 100;
     public Image fillImg; 
@@ -101,6 +103,9 @@ public class Health : NetworkBehaviour
     {
         if (!alive) return;
 
+        if (hitVfx != null)         // play hit vfx if it has one
+            hitVfx.Play();
+
         currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)
         {
@@ -115,6 +120,10 @@ public class Health : NetworkBehaviour
                 animc.RpcNetworkedTrigger("Die");   // don't use SetTrigger here or the anim will run twice for local player
                 RpcSetBool("Dead", true);
             }
+
+            // play death sfx if it has one 
+            if (deathSfx != null)
+                deathSfx.Play();
 
             // Update death score
             if (gameObject.tag == "Player")
