@@ -54,10 +54,25 @@ public class PlayerController : NetworkBehaviour
     private SkillIndicator secondSkillIndicator;
     private SkillIndicator thirdSkillIndicator;
 
-    // Note: a more comprehensive setup would be to use a counter here (if multiple effects locked you) 
-    public bool skillLocked = false;
-    public bool phaseLocked = false;
-    public bool moveLocked = false;
+    private uint skillLockCount = 0;   // keep track of how many things are disabling this
+    private uint phaseLockCount = 0;
+    private uint moveLockCount = 0;
+
+    public bool skillLocked
+    {
+        get { return skillLockCount != 0; }
+        set { if (value) skillLockCount++; else skillLockCount--; }
+    }
+    public bool phaseLocked
+    {
+        get { return phaseLockCount != 0; }
+        set { if (value) phaseLockCount++; else phaseLockCount--; }
+    }
+    public bool moveLocked
+    {
+        get { return moveLockCount != 0; }
+        set { if (value) moveLockCount++; else moveLockCount--; }
+    }
 
     bool mouseVisible = true;
 

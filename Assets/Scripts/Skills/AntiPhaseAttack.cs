@@ -45,6 +45,8 @@ public class AntiPhaseAttack : Skill
 
     protected override void SkillStart()
     {
+        base.SkillStart();
+
         // save initial phase so we know which one to revert to later
         initialPhase = player.gameObject.layer;
         var oppositePhase = initialPhase == phantomLayer ? physicalLayer : phantomLayer;
@@ -64,14 +66,13 @@ public class AntiPhaseAttack : Skill
         
         // listen to weapon triggers
         player.weapon.OnOpponentTrigger += Activate;
-
-        player.skillLocked = true;
-
         transform.rotation = Quaternion.LookRotation(player.rig.FlatForward());    // face camera 
     }
 
     protected override void SkillEnd()
     {
+        base.SkillEnd();
+
         // revert back to intial phase 
         player.weapon.GetComponent<PhasedMaterial>().ShowPhase(initialPhase);
         player.weapon.gameObject.layer = initialPhase;
@@ -86,8 +87,6 @@ public class AntiPhaseAttack : Skill
 
         // ensure collider is deactivated 
         player.weapon.DeactivateCollider();
-
-        player.skillLocked = false;
     }
 
     #endregion

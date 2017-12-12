@@ -56,18 +56,18 @@ public class ForceChange : Skill
 
     protected override void SkillStart()
     {
+        base.SkillStart();
+
         sfx.Play();
+
         if (!isLocalPlayer) return;
-        player.skillLocked = true;
-        player.moveLocked = true;
+
         transform.rotation = Quaternion.LookRotation(player.rig.FlatForward());    // face camera 
     }
 
     protected override void SkillEnd()
     {
-        if (!isLocalPlayer) return;
-        player.skillLocked = false;
-        player.moveLocked = false;
+        base.SkillEnd();
     }
 
 }
