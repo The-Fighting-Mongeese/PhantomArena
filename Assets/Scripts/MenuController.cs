@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour {
+    [SerializeField]
+    Button button1, button2, button3;
+
 
 	// Use this for initialization
 	void Start () {
-		
+        button1.Select();
 	}
 	
 	// Update is called once per frame
