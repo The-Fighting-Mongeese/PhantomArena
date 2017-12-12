@@ -8,6 +8,7 @@ public class Health : NetworkBehaviour
     public GameObject model;
     public GameObject ragdoll;
     public AudioSource deathSfx;
+    public AudioRandom hitSfx; 
     public ParticleSystem hitVfx;
 
     public int maxHealth = 100;
@@ -39,12 +40,25 @@ public class Health : NetworkBehaviour
     
     void OnChangeHealth(int health)
     {
-        currentHealth = health;
+        if (health < currentHealth)
+        {
+            // play hit vfx if it has one
+            if (hitVfx != null)
+                hitVfx.Play();
+
+            // play hit sfx if it has one
+            if (hitSfx != null)
+                hitSfx.Play();
+        }
+        
+        // Update UI
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
 
         if (isLocalPlayer)
-            _healthBar.UpdateUI(health);
+            _healthBar.UpdateUI(health);    // local HUD
+
+        currentHealth = health;
     }
 
 
@@ -107,9 +121,6 @@ public class Health : NetworkBehaviour
     public void CmdTakeTrueDamage2(uint attackerNetId, int amount)
     {
         if (!alive) return;
-
-        if (hitVfx != null)         // play hit vfx if it has one
-            hitVfx.Play();
 
         currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)

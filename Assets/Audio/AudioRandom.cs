@@ -17,6 +17,8 @@ public class AudioRandom : MonoBehaviour {
 
     public void Play()
     {
+        if (source == null) return;
+        if (audioClips.Length == 0) return;
         if (cycle)
         {
             if (++currentIndex >= audioClips.Length) currentIndex = 0;
