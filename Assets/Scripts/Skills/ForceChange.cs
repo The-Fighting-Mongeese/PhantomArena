@@ -8,7 +8,8 @@ public class ForceChange : Skill
     public int manaRequired = 50;
     public ForceChangeProjectile forceChangeProjectilePrefab;
     public Transform projectileSpawnLoc;
-    public AudioSource sfx; 
+    public AudioSource sfx;
+    public ParticleSystem vfx;
 
     private Mana mana;
     // private int netId; 
@@ -22,6 +23,7 @@ public class ForceChange : Skill
 
     public void AnimEvent_FC_LaunchProjectile()
     {
+        vfx.Play();
         if (!isLocalPlayer) return;
         CmdLaunchProjectile(Camera.main.transform.rotation);
     }
@@ -56,18 +58,24 @@ public class ForceChange : Skill
 
     protected override void SkillStart()
     {
-        base.SkillStart();
+        // base.SkillStart(); // do manual locking
 
         sfx.Play();
 
         if (!isLocalPlayer) return;
+
+        player.skillLocked = true;
+        player.phaseLocked = true;
 
         transform.rotation = Quaternion.LookRotation(player.rig.FlatForward());    // face camera 
     }
 
     protected override void SkillEnd()
     {
-        base.SkillEnd();
+        // base.SkillEnd(); // do manual unlocking
+
+        player.skillLocked = false;
+        player.phaseLocked = false;
     }
 
 }
