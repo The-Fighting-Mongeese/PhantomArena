@@ -8,15 +8,18 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Mana))]
 public class PlayerController : NetworkBehaviour
 {
-    private float JUMP_DURATION = 1.0f;
+    private float JUMP_DURATION = 0.7f;
 
     public WeaponCollider weapon;
     public ThirdPersonCameraRig rig;
     public AudioSource phaseChangeSfx;
     public ParticleSystem phaseChangePhantomVfx, phaseChangePhysicalVfx;
 
+    private float currentSpeed = 0f;
     [SerializeField]
     private float speed = 10.0f;
+    [SerializeField]
+    private float acceleration = 5f;
     [SerializeField]
     private float strafeMultiplier = 0.5f;
 
@@ -250,40 +253,38 @@ public class PlayerController : NetworkBehaviour
             transform.rotation = Quaternion.LookRotation(rig.FlatForward());
         }
 
+        vel *= speed;
+        // strafing 
+        if (forwardInput <= 0)
+        {
+            vel *= strafeMultiplier;
+        }
+
         if (IsGrounded())
         {
-            vel *= speed;
-            // strafing 
-            if (forwardInput <= 0) 
-            {
-                vel *= strafeMultiplier;
-            }
+            ac.anim.SetBool("InAir", false);
+
             // jumping
             // GetKey(not down) here to keep applying the jump vel until IsGrounded is false
             if (Input.GetKey(KeyCode.Space))    
             {
-                vel.y = 9.81f * 0.5f * JUMP_DURATION;
+                ac.CmdNetworkedTrigger("JumpTrigger");
+                vel.y = -Physics.gravity.y * 0.5f * JUMP_DURATION;
             }
             else
             {
                 // keep the player sticking to the ground
                 vel.y = Mathf.Min(-0.1f, rb.velocity.y);  
             }
-            rb.velocity = vel;
         }
         else // is not grounded
         {
-            // air control
-            vel.x += rb.velocity.x;
-            vel.z += rb.velocity.z;
-            if (vel.magnitude > speed)
-            {
-                vel = vel.normalized * speed;
-            }
-            // strafing 
+            ac.anim.SetBool("InAir", true);
+
             vel.y += rb.velocity.y;
-            rb.velocity = vel;
         }
+
+        rb.velocity = vel;
     }
 
     public void OnDestroy()
