@@ -66,7 +66,11 @@ public class Health : NetworkBehaviour
     {
         if (!isServer) return;  
         currentHealth += amountHealed;
-        
+        if (currentHealth >= maxHealth) //prevents overheal
+        {
+            currentHealth = maxHealth;
+            return;
+        }
     }
 
     [Command]
@@ -81,6 +85,9 @@ public class Health : NetworkBehaviour
     public void RpcHeal(int amountHealed)
     {
         currentHealth += amountHealed;
+        if (currentHealth >= maxHealth) //prevents overheal
+            currentHealth = maxHealth;
+        
         hpText.text = currentHealth + "/" + maxHealth;
         print(GetComponent<Chat>().pName + " rpc heal called");
     }
@@ -91,6 +98,8 @@ public class Health : NetworkBehaviour
         Debug.LogWarning("CALLING DEPRECATED TAKE DAMAGE");
         Debug.Log("Current life " + currentHealth + " amount " + amount);
         if (!alive) return;
+
+        RpcFlashScreen();
 
         currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)
@@ -122,6 +131,10 @@ public class Health : NetworkBehaviour
     {
         if (!alive) return;
 
+        if (hitVfx != null)         // play hit vfx if it has one
+            hitVfx.Play();
+
+        RpcFlashScreen();
         currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)
         {
@@ -169,6 +182,12 @@ public class Health : NetworkBehaviour
         }
     }
 
+    [ClientRpc] 
+    void RpcFlashScreen()
+    {
+        if(isLocalPlayer)
+        StartCoroutine(ScreenFlash.FlashScreen(6, 0.08f));
+    }
 
     [Command]
     void CmdRespawn()
