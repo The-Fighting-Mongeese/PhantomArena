@@ -52,7 +52,7 @@ public class Health : NetworkBehaviour
 
             // play screen flasher 
             if (isLocalPlayer)
-                StartCoroutine(ScreenFlash.FlashScreen(6, 0.08f));
+                StartCoroutine(ScreenFlash.FlashScreen(1, 0.1f));
         }
 
         // Update UI

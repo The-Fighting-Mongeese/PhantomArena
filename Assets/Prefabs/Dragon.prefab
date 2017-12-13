@@ -5994,6 +5994,7 @@ MonoBehaviour:
   model: {fileID: 0}
   ragdoll: {fileID: 0}
   deathSfx: {fileID: 0}
+  hitSfx: {fileID: 0}
   hitVfx: {fileID: 0}
   maxHealth: 9999
   fillImg: {fileID: 114848795736309790}
@@ -6072,7 +6073,6 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -6090,7 +6090,6 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -6344,7 +6343,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1023692453041470}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 99, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224643054096212968}
@@ -6380,7 +6379,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1679332169213724}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00048828125, y: 0.000015258789, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224643054096212968}
@@ -6398,7 +6397,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1098929515699874}
   m_LocalRotation: {x: -0.5273975, y: -0.5234334, z: 0.460317, w: 0.48577535}
-  m_LocalPosition: {x: 6.4400024, y: 0, z: -7.89}
+  m_LocalPosition: {x: 0, y: 0, z: -7.89}
   m_LocalScale: {x: 0.010000015, y: 0.010000002, z: 1}
   m_Children:
   - {fileID: 224178769516197944}
