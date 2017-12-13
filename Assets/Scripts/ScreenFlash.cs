@@ -15,11 +15,7 @@ public class ScreenFlash : MonoBehaviour {
     public static IEnumerator FlashScreen(int numOfFlashes, float timeBetweenEachFlash)
     {
 
-        print("flas screen");
-
         int i = 0;
-
-        //screenFlashUi.SetActive(true);
 
         while (i < numOfFlashes)
         {
@@ -31,7 +27,6 @@ public class ScreenFlash : MonoBehaviour {
             screenFlashUi.GetComponent<Image>().color = new Color(0,0,0,0);
 
             yield return new WaitForSeconds(timeBetweenEachFlash);
-            print("flas asdfasdf");
             i++;
         }
     }
