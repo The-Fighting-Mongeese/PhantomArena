@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;  
 
 public class PlayerSetup : NetworkBehaviour
 {    
@@ -12,6 +13,7 @@ public class PlayerSetup : NetworkBehaviour
 
     private void Start()
     {
+
         if (!isLocalPlayer) //if this object isn't controlled by the system, then we have to disable all the components.
         {
             DisableComponents();
@@ -20,6 +22,17 @@ public class PlayerSetup : NetworkBehaviour
         if (isLocalPlayer)
         {
             playerHealthbar.SetActive(false);
+
+            if (SceneManager.GetActiveScene().name == "DanielTerrainScene")
+            {
+                print("haiya");
+                GameObject initialSpawn = GameObject.Find("PlayerSpawn");
+                if (initialSpawn != null)
+                {
+                    transform.position = initialSpawn.transform.position;
+                }
+            }
+
         }
     }
 
