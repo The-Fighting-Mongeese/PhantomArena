@@ -84,11 +84,11 @@ public class PlayerController : NetworkBehaviour
 
 #if UNITY_PS4
         basicAttackIndicator.SetButtonNameText("R1");
-        firstSkillIndicator.SetButtonNameText("???");
-        secondSkillIndicator.SetButtonNameText("???");
-        thirdSkillIndicator.SetButtonNameText("???");
-        fourthSkillIndicator.SetButtonNameText("???");
-        fifthSkillIndicator.SetButtonNameText("???");
+        firstSkillIndicator.SetButtonNameText("L1");
+        secondSkillIndicator.SetButtonNameText("D-Pad Up");
+        thirdSkillIndicator.SetButtonNameText("D-Pad ???");
+        fourthSkillIndicator.SetButtonNameText("D-Pad ???");
+        fifthSkillIndicator.SetButtonNameText("D-Pad ???");
 #endif
 #if UNITY_EDITOR
         basicAttackIndicator.SetButtonNameText("Left-Click");
