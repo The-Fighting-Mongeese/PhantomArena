@@ -882,8 +882,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4870818241820464}
   - component: {fileID: 20468276155070792}
-  - component: {fileID: 124525558232847454}
-  - component: {fileID: 92672500369812016}
   - component: {fileID: 81328529938045772}
   - component: {fileID: 114878296487091998}
   m_Layer: 0
@@ -1336,13 +1334,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!92 &92672500369812016
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1756296096583978}
-  m_Enabled: 1
 --- !u!114 &114005480553003088
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3395,13 +3386,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!124 &124525558232847454
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1756296096583978}
-  m_Enabled: 1
 --- !u!222 &222008386350686240
 CanvasRenderer:
   m_ObjectHideFlags: 1
