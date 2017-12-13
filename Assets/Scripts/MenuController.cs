@@ -17,6 +17,7 @@ public class MenuController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+#if UNITY_PS4
         if (Input.GetButtonDown("Skill5")) {
             index = Mathf.Max(index - 1, 0);
             buttonArray[index].Select();
@@ -28,6 +29,7 @@ public class MenuController : MonoBehaviour {
         if (Input.GetButtonDown("Submit")) {
             buttonArray[index].onClick.Invoke();
         }
+#endif
     }
 
     public void Button1OnClick() {
