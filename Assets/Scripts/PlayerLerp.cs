@@ -16,7 +16,7 @@ public class PlayerLerp : NetworkBehaviour {
     public override void OnStartClient()
     {
         base.OnStartClient();
-        transform.position = playerNext;
+        playerNext = transform.position;
         playerPrevious = playerNext;
         transform.rotation = playerRotation;
     }
