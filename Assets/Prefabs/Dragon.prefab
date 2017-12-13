@@ -5993,6 +5993,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 0}
   ragdoll: {fileID: 0}
+  deathSfx: {fileID: 0}
+  hitVfx: {fileID: 0}
   maxHealth: 9999
   fillImg: {fileID: 114848795736309790}
   hpText: {fileID: 114641056407310472}
@@ -6023,8 +6025,8 @@ MonoBehaviour:
   minIdleTime: 5
   maxIdleTime: 15
   timeBetweenScans: 4
-  aggroRadius: 30
-  maxAggroDistance: 40
+  aggroRadius: 15
+  maxAggroDistance: 22
   fireRate: 0.2
 --- !u!114 &114957986614244540
 MonoBehaviour:
