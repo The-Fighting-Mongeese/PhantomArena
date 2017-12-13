@@ -20,6 +20,8 @@ public class Health : NetworkBehaviour
 
     public float respawnDelay = 5f;
 
+    public bool respawn = true;
+
     public bool alive = true;
 
     public delegate void VoidDelegate();
@@ -157,6 +159,10 @@ public class Health : NetworkBehaviour
                 animc.RpcNetworkedTrigger("Die");   // don't use SetTrigger here or the anim will run twice for local player
                 RpcSetBool("Dead", true);
             }
+            else
+            {
+                gameObject.SetActive(false);        // else disable right away 
+            }
 
             // play death sfx if it has one 
             if (deathSfx != null)
@@ -178,7 +184,10 @@ public class Health : NetworkBehaviour
             }
 
             // respawn after delay
-            CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+            if (respawn)
+                CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+            else
+                enabled = false;
         }
     }
 
