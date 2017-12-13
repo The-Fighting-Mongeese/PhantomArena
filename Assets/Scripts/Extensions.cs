@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+using UnityEngine;
 
 
 public static class Extensions
@@ -31,5 +33,10 @@ public static class Extensions
             group.interactable = false;
             group.blocksRaycasts = false;
         }
+    }
+
+    public static T GetBehaviour<T>(this Animator animator, String id) where T : SkillStateMachine
+    {
+        return animator.GetBehaviours<T>().ToList().First(behaviour => behaviour.id == id);
     }
 }

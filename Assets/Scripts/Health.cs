@@ -89,11 +89,20 @@ public class Health : NetworkBehaviour
             }
 
             // Update death score
-            if (gameObject.tag == "Player")
+            if (gameObject.CompareTag("Player"))
                 GetComponent<PlayerMetrics>().deaths++;
 
-            // respawn after delay
-            CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+            if (gameObject.CompareTag("Tower"))
+            {
+                RpcTowerRespawn();
+                alive = true;
+                currentHealth = maxHealth;
+            }
+            else
+            {
+                // respawn after delay
+                CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+            }
         }
     }
 
@@ -140,8 +149,17 @@ public class Health : NetworkBehaviour
                 GetComponent<PlayerMetrics>().deaths++;
             }
 
-            // respawn after delay
-            CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+            if (gameObject.CompareTag("Tower"))
+            {
+                RpcTowerRespawn();
+                alive = true;
+                currentHealth = maxHealth;
+            }
+            else
+            {
+                // respawn after delay
+                CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+            }
         }
     }
 
@@ -190,6 +208,19 @@ public class Health : NetworkBehaviour
         {
             animc.anim.SetBool(name, torf); // this will be ran twice, but with the same value there will be no problem
         }
+    }
+
+    [ClientRpc]
+    void RpcTowerRespawn()
+    {
+        CoroutineManager.Instance.StartCoroutine(TowerRespawnAfterDelay(2.0f));
+    }
+
+    private IEnumerator TowerRespawnAfterDelay(float seconds)
+    {
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(seconds);
+        gameObject.SetActive(true);
     }
 
 }
