@@ -27,12 +27,12 @@ public class MouseLook : NetworkBehaviour {
     private void Update()
     {
         //Rotation via turning around
-        float _rotationY = Input.GetAxis("Mouse X");
+        float _rotationY = Input.GetAxisRaw("Mouse X");
         Vector3 _rotation = new Vector3(0f, _rotationY, 0f) * lookSensitivity;
         transform.Rotate(_rotation);
 
         //Calculating camera rotation as a 3D vector (looking up and down)
-        rotationX -= Input.GetAxis("Mouse Y") * lookSensitivity;
+        rotationX -= Input.GetAxisRaw("Mouse Y") * lookSensitivity;
         rotationX = Mathf.Clamp(rotationX, minimumVerticalAngle, maximumVerticalAngle);
         playerCam.transform.localEulerAngles = new Vector3(rotationX, 0, 0); //Rotate the camera only when looking up and down so as to prevent flying movements.
 
