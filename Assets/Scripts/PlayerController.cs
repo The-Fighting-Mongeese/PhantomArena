@@ -86,9 +86,9 @@ public class PlayerController : NetworkBehaviour
         basicAttackIndicator.SetButtonNameText("R1");
         firstSkillIndicator.SetButtonNameText("L1");
         secondSkillIndicator.SetButtonNameText("D-Pad Up");
-        thirdSkillIndicator.SetButtonNameText("D-Pad ???");
-        fourthSkillIndicator.SetButtonNameText("D-Pad ???");
-        fifthSkillIndicator.SetButtonNameText("D-Pad ???");
+        thirdSkillIndicator.SetButtonNameText("D-Pad Right");
+        fourthSkillIndicator.SetButtonNameText("D-Pad Down");
+        fifthSkillIndicator.SetButtonNameText("D-Pad Left");
 #endif
 #if UNITY_EDITOR
         basicAttackIndicator.SetButtonNameText("Left-Click");

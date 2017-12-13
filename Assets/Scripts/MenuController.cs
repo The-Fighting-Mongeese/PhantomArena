@@ -19,8 +19,15 @@ public class MenuController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetButtonDown("Fire1")) {
-            index = (index + 1) % 3;
+        if (Input.GetButtonDown("Skill5")) {
+            index--;
+            if (index < 0) {
+                index = buttonArray.Length - 1;
+            }
+            buttonArray[index].Select();
+        }
+        if (Input.GetButtonDown("Skill3")) {
+            index = (index + 1) % buttonArray.Length;
             buttonArray[index].Select();
         }
         if (Input.GetButtonDown("Submit")) {
