@@ -8,6 +8,7 @@ public class Health : NetworkBehaviour
     public GameObject model;
     public GameObject ragdoll;
     public AudioSource deathSfx;
+    public AudioRandom hitSfx; 
     public ParticleSystem hitVfx;
 
     public int maxHealth = 100;
@@ -20,6 +21,10 @@ public class Health : NetworkBehaviour
     public float respawnDelay = 5f;
 
     public bool alive = true;
+
+    public delegate void VoidDelegate();
+
+    public VoidDelegate OnDeath;
 
     private UIBar _healthBar;       // health bar HUD (for current player only)
 
@@ -35,12 +40,25 @@ public class Health : NetworkBehaviour
     
     void OnChangeHealth(int health)
     {
-        currentHealth = health;
+        if (health < currentHealth)
+        {
+            // play hit vfx if it has one
+            if (hitVfx != null)
+                hitVfx.Play();
+
+            // play hit sfx if it has one
+            if (hitSfx != null)
+                hitSfx.Play();
+        }
+        
+        // Update UI
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
 
         if (isLocalPlayer)
-            _healthBar.UpdateUI(health);
+            _healthBar.UpdateUI(health);    // local HUD
+
+        currentHealth = health;
     }
 
 
@@ -70,6 +88,7 @@ public class Health : NetworkBehaviour
     [Command]
     public void CmdTakeTrueDamage(int amount)
     {
+        Debug.LogWarning("CALLING DEPRECATED TAKE DAMAGE");
         Debug.Log("Current life " + currentHealth + " amount " + amount);
         if (!alive) return;
 
@@ -112,15 +131,20 @@ public class Health : NetworkBehaviour
     {
         if (!alive) return;
 
-        if (hitVfx != null)         // play hit vfx if it has one
-            hitVfx.Play();
-
         currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)
         {
             Debug.Log("Dieing");
             alive = false;
             currentHealth = 0;
+
+            // raise raise 
+            if (OnDeath != null)
+            {
+                Debug.Log("DIEING AND EVENT IS OK");
+                OnDeath();
+
+            }
 
             // play death animation if it has one 
             var animc = GetComponent<AnimateController>();
