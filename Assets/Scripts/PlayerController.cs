@@ -8,15 +8,18 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Mana))]
 public class PlayerController : NetworkBehaviour
 {
-    private float JUMP_DURATION = 1.0f;
+    private float JUMP_DURATION = 0.7f;
 
     public WeaponCollider weapon;
     public ThirdPersonCameraRig rig;
     public AudioSource phaseChangeSfx;
     public ParticleSystem phaseChangePhantomVfx, phaseChangePhysicalVfx;
 
+    private float currentSpeed = 0f;
     [SerializeField]
     private float speed = 10.0f;
+    [SerializeField]
+    private float acceleration = 5f;
     [SerializeField]
     private float strafeMultiplier = 0.5f;
 
@@ -44,16 +47,35 @@ public class PlayerController : NetworkBehaviour
     private Skill secondSkill;
     [SerializeField]
     private Skill thirdSkill;
+    [SerializeField]
+    private Skill fourthSkill;
+    [SerializeField]
+    private Skill fifthSkil;
 
     private SkillIndicator basicAttackIndicator;
     private SkillIndicator firstSkillIndicator;
     private SkillIndicator secondSkillIndicator;
     private SkillIndicator thirdSkillIndicator;
 
-    // Note: a more comprehensive setup would be to use a counter here (if multiple effects locked you) 
-    public bool skillLocked = false;
-    public bool phaseLocked = false;
-    public bool moveLocked = false;
+    private uint skillLockCount = 0;   // keep track of how many things are disabling this
+    private uint phaseLockCount = 0;
+    private uint moveLockCount = 0;
+
+    public bool skillLocked
+    {
+        get { return skillLockCount != 0; }
+        set { if (value) skillLockCount++; else skillLockCount--; }
+    }
+    public bool phaseLocked
+    {
+        get { return phaseLockCount != 0; }
+        set { if (value) phaseLockCount++; else phaseLockCount--; }
+    }
+    public bool moveLocked
+    {
+        get { return moveLockCount != 0; }
+        set { if (value) moveLockCount++; else moveLockCount--; }
+    }
 
     bool mouseVisible = true;
 
@@ -89,10 +111,14 @@ public class PlayerController : NetworkBehaviour
         firstSkillIndicator.SetButtonNameText("1");
         secondSkillIndicator.SetButtonNameText("2");
         thirdSkillIndicator.SetButtonNameText("3");
-    #endif
+#endif
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        if (isLocalPlayer)  // Note: Unnecessary check - PlayerSetup disable this component;
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
         // customize death
         deathBehaviour = ac.anim.GetBehaviour<SkillStateMachine>("Death");
         if (deathBehaviour != null)
@@ -105,7 +131,7 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetButtonDown("Cancel"))
         {
             //Cursor.visible = mouseVisible;
             if (mouseVisible)
@@ -137,7 +163,7 @@ public class PlayerController : NetworkBehaviour
         // Handle phase change 
         if (!phaseLocked)
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetButtonDown("PhaseChange"))
             {
                 AttemptPhaseChange();
             }
@@ -150,7 +176,6 @@ public class PlayerController : NetworkBehaviour
             {
                 if (basicAttack.ConditionsMet())
                 {
-                    Debug.Log("Basic attacking");
                     ac.CmdNetworkedTrigger("Attack1Trigger"); // TODO: Move to skill
                     basicAttack.ConsumeResources();
                 }
@@ -177,6 +202,22 @@ public class PlayerController : NetworkBehaviour
                 {
                     ac.CmdNetworkedTrigger("SkillForceChangeTrigger");
                     thirdSkill.ConsumeResources();
+                }
+            }
+            else if (Input.GetButtonDown("Skill4"))
+            {
+                if (fourthSkill.ConditionsMet())
+                {
+                    fourthSkill.Activate(null);     // note: AnimLessSkill
+                    fourthSkill.ConsumeResources();
+                }
+            }
+            else if (Input.GetButtonDown("Skill5"))
+            {
+                if (fifthSkil.ConditionsMet())
+                {
+                    fifthSkil.ConsumeResources();
+                    fifthSkil.Activate(null);     // warning: order matters note: AnimLessSkill 
                 }
             }
         }
@@ -211,44 +252,48 @@ public class PlayerController : NetworkBehaviour
             transform.rotation = Quaternion.LookRotation(rig.FlatForward());
         }
 
+        vel *= speed;
+        // strafing 
+        if (forwardInput <= 0)
+        {
+            vel *= strafeMultiplier;
+        }
+
         if (IsGrounded())
         {
-            vel *= speed;
-            // strafing 
-            if (forwardInput <= 0) 
-            {
-                vel *= strafeMultiplier;
-            }
+            ac.anim.SetBool("InAir", false);
+
             // jumping
             // GetKey(not down) here to keep applying the jump vel until IsGrounded is false
-            if (Input.GetKey(KeyCode.Space))    
+            if (Input.GetButton("Jump"))    
             {
-                vel.y = 9.81f * 0.5f * JUMP_DURATION;
+                ac.CmdNetworkedTrigger("JumpTrigger");
+                vel.y = -Physics.gravity.y * 0.5f * JUMP_DURATION;
             }
             else
             {
                 // keep the player sticking to the ground
                 vel.y = Mathf.Min(-0.1f, rb.velocity.y);  
             }
-            rb.velocity = vel;
         }
         else // is not grounded
         {
-            // air control
-            vel.x += rb.velocity.x;
-            vel.z += rb.velocity.z;
-            if (vel.magnitude > speed)
-            {
-                vel = vel.normalized * speed;
-            }
-            // strafing 
+            ac.anim.SetBool("InAir", true);
+
             vel.y += rb.velocity.y;
-            rb.velocity = vel;
         }
+
+        rb.velocity = vel;
     }
 
     public void OnDestroy()
     {
+        if (isLocalPlayer)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
         if (deathBehaviour != null)
         {
             deathBehaviour.OnStateEntered -= OnDeath;
@@ -321,19 +366,20 @@ public class PlayerController : NetworkBehaviour
     {
         // Drawing core bounds (Note: the calculations are correct, do not use half coreHeight)
         DebugExtension.DrawCapsule(transform.position + (transform.up * coreHeight), transform.position - (transform.up * coreHeight), coreRadius);
+        Debug.DrawLine(transform.position, transform.position - (Vector3.up * 1.1f));
     }
 
     bool IsGrounded()
     {
         if (gameObject.layer == physicalLayer) 
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << phantomLayer));
+            return Physics.Raycast(transform.position, -Vector3.up, 1.1f, LayerHelper.WalkablePhysical);
         }
         if (gameObject.layer == phantomLayer)
         {
-            return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f, ~(1 << physicalLayer));
+            return Physics.Raycast(transform.position, -Vector3.up, 1.1f, LayerHelper.WalkablePhantom);
         }
-        return Physics.Raycast(transform.position, -Vector3.up, 1.5f * coreHeight + 0.01f);
+        return Physics.Raycast(transform.position, -Vector3.up, 1.1f);
     }
 
     private void OnDeath()
@@ -357,17 +403,3 @@ public class PlayerController : NetworkBehaviour
         }
     }
 }
-
-/* Function to combine layers. 
-int CombineLayers(params string[] layers)
-{
-    int finalLayerMask = 0;
-    foreach (string s in layers)
-    {
-        var layer = LayerMask.NameToLayer(s);
-        finalLayerMask = finalLayerMask | layer;
-    }
-    return finalLayerMask;
-}
-*/
-
