@@ -7,6 +7,8 @@ public class ScreenFlash : MonoBehaviour {
 
     public static GameObject screenFlashUi;
 
+    private static Color flashColor = new Color(1, 0, 0, 0.3f);    // transparent red
+
     private void Awake()
     {
         screenFlashUi = GameObject.Find("HealthFlash");
@@ -20,7 +22,7 @@ public class ScreenFlash : MonoBehaviour {
         while (i < numOfFlashes)
         {
 
-            screenFlashUi.GetComponent<Image>().color = Color.red;
+            screenFlashUi.GetComponent<Image>().color = flashColor;
 
             yield return new WaitForSeconds(timeBetweenEachFlash);
 
