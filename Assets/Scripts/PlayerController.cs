@@ -40,22 +40,8 @@ public class PlayerController : NetworkBehaviour
     private SkillStateMachine deathBehaviour;
 
     [SerializeField]
-    private Skill basicAttack;
-    [SerializeField]
-    private Skill firstSkill;
-    [SerializeField]
-    private Skill secondSkill;
-    [SerializeField]
-    private Skill thirdSkill;
-    [SerializeField]
-    private Skill fourthSkill;
-    [SerializeField]
-    private Skill fifthSkil;
-
-    private SkillIndicator basicAttackIndicator;
-    private SkillIndicator firstSkillIndicator;
-    private SkillIndicator secondSkillIndicator;
-    private SkillIndicator thirdSkillIndicator;
+    private Skill basicAttack, firstSkill, secondSkill, thirdSkill, fourthSkill, fifthSkill;
+    private SkillIndicator basicAttackIndicator, firstSkillIndicator, secondSkillIndicator, thirdSkillIndicator, fourthSkillIndicator, fifthSkillIndicator;
 
     private uint skillLockCount = 0;   // keep track of how many things are disabling this
     private uint phaseLockCount = 0;
@@ -93,24 +79,32 @@ public class PlayerController : NetworkBehaviour
         firstSkillIndicator = GameObject.Find("CanvasUI").FindObject("FirstSkillIndicator").GetComponent<SkillIndicator>();
         secondSkillIndicator = GameObject.Find("CanvasUI").FindObject("SecondSkillIndicator").GetComponent<SkillIndicator>();
         thirdSkillIndicator = GameObject.Find("CanvasUI").FindObject("ThirdSkillIndicator").GetComponent<SkillIndicator>();
-        
-    #if UNITY_PS4
-        basicAttackIndicator.SetButtonNameText("???");
+        fourthSkillIndicator = GameObject.Find("CanvasUI").FindObject("FourthSkillIndicator").GetComponent<SkillIndicator>();
+        fifthSkillIndicator = GameObject.Find("CanvasUI").FindObject("FifthSkillIndicator").GetComponent<SkillIndicator>();
+
+#if UNITY_PS4
+        basicAttackIndicator.SetButtonNameText("R1");
         firstSkillIndicator.SetButtonNameText("???");
         secondSkillIndicator.SetButtonNameText("???");
         thirdSkillIndicator.SetButtonNameText("???");
-    #endif
-    #if UNITY_EDITOR
+        fourthSkillIndicator.SetButtonNameText("???");
+        fifthSkillIndicator.SetButtonNameText("???");
+#endif
+#if UNITY_EDITOR
         basicAttackIndicator.SetButtonNameText("Left-Click");
         firstSkillIndicator.SetButtonNameText("1");
         secondSkillIndicator.SetButtonNameText("2");
         thirdSkillIndicator.SetButtonNameText("3");
-    #endif
-    #if UNITY_STANDALONE_WIN
+        fourthSkillIndicator.SetButtonNameText("4");
+        fifthSkillIndicator.SetButtonNameText("5");
+#endif
+#if UNITY_STANDALONE_WIN
         basicAttackIndicator.SetButtonNameText("Left-Click");
         firstSkillIndicator.SetButtonNameText("1");
         secondSkillIndicator.SetButtonNameText("2");
         thirdSkillIndicator.SetButtonNameText("3");
+        fourthSkillIndicator.SetButtonNameText("4");
+        fifthSkillIndicator.SetButtonNameText("5");
 #endif
 
         if (isLocalPlayer)  // Note: Unnecessary check - PlayerSetup disable this component;
@@ -214,10 +208,10 @@ public class PlayerController : NetworkBehaviour
             }
             else if (Input.GetButtonDown("Skill5"))
             {
-                if (fifthSkil.ConditionsMet())
+                if (fifthSkill.ConditionsMet())
                 {
-                    fifthSkil.ConsumeResources();
-                    fifthSkil.Activate(null);     // warning: order matters note: AnimLessSkill 
+                    fifthSkill.ConsumeResources();
+                    fifthSkill.Activate(null);     // warning: order matters note: AnimLessSkill 
                 }
             }
         }
@@ -226,6 +220,8 @@ public class PlayerController : NetworkBehaviour
         firstSkillIndicator.UpdateUI(firstSkill.ConditionsMet() && !skillLocked, firstSkill.cooldownCounter);
         secondSkillIndicator.UpdateUI(secondSkill.ConditionsMet() && !skillLocked, secondSkill.cooldownCounter);
         thirdSkillIndicator.UpdateUI(thirdSkill.ConditionsMet() && !skillLocked, thirdSkill.cooldownCounter);
+        fourthSkillIndicator.UpdateUI(fourthSkill.ConditionsMet() && !skillLocked, fourthSkill.cooldownCounter);
+        fifthSkillIndicator.UpdateUI(fifthSkill.ConditionsMet() && !skillLocked, fifthSkill.cooldownCounter);
     }
 
     private void FixedUpdate()

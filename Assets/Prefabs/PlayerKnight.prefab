@@ -5461,7 +5461,7 @@ MonoBehaviour:
   secondSkill: {fileID: 114321974989365938}
   thirdSkill: {fileID: 114013752531894518}
   fourthSkill: {fileID: 114407697061368792}
-  fifthSkil: {fileID: 114161476893564030}
+  fifthSkill: {fileID: 114161476893564030}
 --- !u!114 &114390783488668994
 MonoBehaviour:
   m_ObjectHideFlags: 1
