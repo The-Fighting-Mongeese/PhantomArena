@@ -220,8 +220,11 @@ public class Health : NetworkBehaviour
             animc.anim.SetBool("Dead", false);
 
         // reset to spawn position
-        GameObject[] spawnLocations = GameObject.FindGameObjectsWithTag("PlayerSpawn");
-        transform.position = spawnLocations[Random.Range(0, spawnLocations.Length)].transform.position;
+        if (gameObject.CompareTag("Player"))
+        {
+            GameObject[] spawnLocations = GameObject.FindGameObjectsWithTag("PlayerSpawn");
+            transform.position = spawnLocations[Random.Range(0, spawnLocations.Length)].transform.position;
+        }
 
         // reset 
         gameObject.SetActive(true);
