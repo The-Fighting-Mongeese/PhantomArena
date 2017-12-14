@@ -51,8 +51,12 @@ public class Health : NetworkBehaviour
             // play hit sfx if it has one
             if (hitSfx != null)
                 hitSfx.Play();
+
+            // play screen flasher 
+            if (isLocalPlayer)
+                StartCoroutine(ScreenFlash.FlashScreen(1, 0.1f));
         }
-        
+
         // Update UI
         fillImg.fillAmount = (float)health / maxHealth;
         hpText.text = health + "/" + maxHealth;
@@ -101,8 +105,6 @@ public class Health : NetworkBehaviour
         Debug.Log("Current life " + currentHealth + " amount " + amount);
         if (!alive) return;
 
-        RpcFlashScreen();
-
         currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)
         {
@@ -136,7 +138,6 @@ public class Health : NetworkBehaviour
         if (hitVfx != null)         // play hit vfx if it has one
             hitVfx.Play();
 
-        RpcFlashScreen();
         currentHealth -= amount;    // syncvar - does not require Rpc call
         if (currentHealth <= 0)
         {
@@ -189,13 +190,6 @@ public class Health : NetworkBehaviour
             else
                 enabled = false;
         }
-    }
-
-    [ClientRpc] 
-    void RpcFlashScreen()
-    {
-        if(isLocalPlayer)
-        StartCoroutine(ScreenFlash.FlashScreen(6, 0.08f));
     }
 
     [Command]

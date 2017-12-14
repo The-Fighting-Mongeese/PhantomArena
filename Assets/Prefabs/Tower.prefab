@@ -769,8 +769,8 @@ MonoBehaviour:
   fillImg: {fileID: 114898204093181668}
   hpText: {fileID: 114096088588810458}
   currentHealth: 100
-  respawnDelay: 5
-  respawn: 0
+  respawnDelay: 30
+  respawn: 1
   alive: 1
 --- !u!114 &114898204093181668
 MonoBehaviour:

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 5429c9c045fcf624ba93b5ff1dee56bf
-timeCreated: 1511326164
+guid: a6159430a1039d54e966538dc71f0f9a
+timeCreated: 1513154765
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -36,7 +36,7 @@ TextureImporter:
     mipBias: -1
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: -1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
