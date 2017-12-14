@@ -44,6 +44,7 @@ public class Health : NetworkBehaviour
     {
         if (health < currentHealth)
         {
+            Debug.Log("New health: " + health + " old health: " + currentHealth);
             // play hit vfx if it has one
             if (hitVfx != null)
                 hitVfx.Play();
@@ -67,7 +68,7 @@ public class Health : NetworkBehaviour
         currentHealth = health;
     }
 
-
+    // Deprecated for now 
     public void Heal(int amountHealed)
     {
         if (!isServer) return;  
@@ -84,6 +85,7 @@ public class Health : NetworkBehaviour
     {
         print( GetComponent<Chat>().pName + " cmd heal called");
         if (!alive) return;
+        if (currentHealth >= maxHealth) return;
         RpcHeal(amountHealed);
     }
 

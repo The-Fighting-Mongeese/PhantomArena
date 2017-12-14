@@ -82,7 +82,6 @@ public class ScoreBoard : MonoBehaviour {
                         if (item.GetComponent<PlayerScoreboardItem>().usernameText.text == player.GetComponent<PlayerMetrics>().playername)
                         {
                             PlayerScoreboardItem playerScoreItem = item.GetComponent<PlayerScoreboardItem>();
-                            print(player.GetComponent<PlayerMetrics>().deaths);
                             playerScoreItem.Setup(player.GetComponent<PlayerMetrics>().playername, player.GetComponent<PlayerMetrics>().kills, player.GetComponent<PlayerMetrics>().deaths);
                             flag = true;
                             break;

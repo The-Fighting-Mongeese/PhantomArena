@@ -40,7 +40,7 @@ public class HealthPack : MonoBehaviour {
 
         if (other.tag == "Player")
         {
-            other.GetComponent<Health>().Heal(20);
+            other.GetComponent<Health>().CmdHeal(20);
             StartCoroutine(DisableHealthPack());
         }
     }

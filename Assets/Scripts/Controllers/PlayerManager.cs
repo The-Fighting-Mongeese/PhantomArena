@@ -81,8 +81,6 @@ public class PlayerManager : NetworkBehaviour
     {
         while (true)
         {
-            Debug.Log("Update players");
-
             foreach (KeyValuePair<int, PlayerMetrics> p in playerList.ToArray())
             {
                 if (p.Value == null)
