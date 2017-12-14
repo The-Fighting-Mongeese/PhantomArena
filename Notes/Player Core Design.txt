@@ -1,0 +1,25 @@
+Option 1 : Core is in default layer and doesn't change
+	+ All net and logic code is kept in the Player script
+	- Special logic is implemented not to change core collider specifically 
+	= Have an overload extension ignore a specified layer 
+	= Bundle all colliders into a single game object, and then feed that into the player controller 
+ 	= Reset core layer to default after layer changes 
+
+Option 2 : Have the core initiate death/respawn when it detects a collision 
+	+ Simple
+	+ Can remove objects inside count 
+	- Logic is split into the core now
+	- Requires setup in the Player script (can't have net code in children object) 
+	- (Untested) player may jut out of the object (as the real colliders will push the player out) 
+	= Have OnTriggerEnter call a function in the Player script 
+
+Option 3 : Physics sphere cast when changing
+	+ no seperate object 
+	+ no seperate script 
+	+ not constantly checking
+	- not setup yet or tested (not sure if it'll work)
+	- not visual (can't easily see bounds of cast)
+	- (Untested) will always hit self
+	- Need more logic to check what player is colliding with 
+		- using the logic from before, could just check if >1 checks (more than body is scanned, currently in something) 
+	= Implement function to do a small spherecast in players body to check if more than one object is detected.
