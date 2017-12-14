@@ -20,7 +20,7 @@ public class WeaponCollider : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && other.gameObject != host)
+        if ((other.CompareTag("Player") || other.CompareTag("Tower")) && other.gameObject != host)
         {
             if (OnOpponentTrigger != null)
                 OnOpponentTrigger(other.gameObject);

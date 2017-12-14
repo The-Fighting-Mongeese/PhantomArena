@@ -20,6 +20,8 @@ public class Health : NetworkBehaviour
 
     public float respawnDelay = 5f;
 
+    public bool respawn = true;
+
     public bool alive = true;
 
     public delegate void VoidDelegate();
@@ -42,6 +44,7 @@ public class Health : NetworkBehaviour
     {
         if (health < currentHealth)
         {
+            Debug.Log("New health: " + health + " old health: " + currentHealth);
             // play hit vfx if it has one
             if (hitVfx != null)
                 hitVfx.Play();
@@ -65,7 +68,7 @@ public class Health : NetworkBehaviour
         currentHealth = health;
     }
 
-
+    // Deprecated for now 
     public void Heal(int amountHealed)
     {
         if (!isServer) return;  
@@ -82,6 +85,7 @@ public class Health : NetworkBehaviour
     {
         print( GetComponent<Chat>().pName + " cmd heal called");
         if (!alive) return;
+        if (currentHealth >= maxHealth) return;
         RpcHeal(amountHealed);
     }
 
@@ -158,6 +162,10 @@ public class Health : NetworkBehaviour
                 animc.RpcNetworkedTrigger("Die");   // don't use SetTrigger here or the anim will run twice for local player
                 RpcSetBool("Dead", true);
             }
+            else
+            {
+                gameObject.SetActive(false);        // else disable right away 
+            }
 
             // play death sfx if it has one 
             if (deathSfx != null)
@@ -179,7 +187,10 @@ public class Health : NetworkBehaviour
             }
 
             // respawn after delay
-            CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+            if (respawn)
+                CoroutineManager.Instance.StartCoroutine(RespawnAfterDelay(respawnDelay));
+            else
+                enabled = false;
         }
     }
 
@@ -205,8 +216,11 @@ public class Health : NetworkBehaviour
             animc.anim.SetBool("Dead", false);
 
         // reset to spawn position
-        GameObject[] spawnLocations = GameObject.FindGameObjectsWithTag("PlayerSpawn");
-        transform.position = spawnLocations[Random.Range(0, spawnLocations.Length)].transform.position;
+        if (gameObject.CompareTag("Player"))
+        {
+            GameObject[] spawnLocations = GameObject.FindGameObjectsWithTag("PlayerSpawn");
+            transform.position = spawnLocations[Random.Range(0, spawnLocations.Length)].transform.position;
+        }
 
         // reset 
         gameObject.SetActive(true);
